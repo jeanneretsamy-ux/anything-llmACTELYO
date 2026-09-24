@@ -3,7 +3,8 @@
     "module": "commonjs",
     "target": "ES2020",
     "skipLibCheck": true,
-    "types": []
+    "types": [],
+    "typeRoots": []
   },
   "include": [
     "./endpoints/**/*",

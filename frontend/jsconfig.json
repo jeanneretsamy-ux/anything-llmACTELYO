@@ -5,6 +5,7 @@
     "jsx": "react",
     "skipLibCheck": true,
     "types": [],
+    "typeRoots": [],
     "paths": {
       "@/*": [
         "./src/*"

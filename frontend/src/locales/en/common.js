@@ -7,7 +7,7 @@ const TRANSLATIONS = {
     llm: {
       title: "LLM Preference",
       description:
-        "AnythingLLM can work with many LLM providers. This will be the service which handles chatting.",
+        "ACTELYO LAW HARNESS can work with many LLM providers. This will be the service which handles chatting.",
     },
     userSetup: {
       title: "User Setup",

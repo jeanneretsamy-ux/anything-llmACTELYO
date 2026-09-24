@@ -3,26 +3,26 @@ const TRANSLATIONS = {
   onboarding: {
     survey: {
       email: "Adresse e-mail",
-      useCase: "Pour quel usage utiliserez-vous AnythingLLM ?",
-      useCaseWork: "Pour le travail",
-      useCasePersonal: "Pour un usage personnel",
+      useCase: "Pour quel usage utiliserez-vous ACTELYO LAW HARNESS ?",
+      useCaseWork: "Pour le cabinet ou l'entreprise",
+      useCasePersonal: "Pour un usage personnel ou recherche",
       useCaseOther: "Autre",
-      comment: "Comment avez-vous découvert AnythingLLM ?",
-      commentPlaceholder: "Recherche, recommandation, Twitter, YouTube, etc.",
-      skip: "Ignorer l'enquête",
+      comment: "Comment avez-vous configuré ACTELYO LAW HARNESS ?",
+      commentPlaceholder: "Actelyo ERP, recommandation, intégration juridique, etc.",
+      skip: "Ignorer",
       thankYou: "Merci pour votre retour !",
-      title: "Bienvenue",
+      title: "Bienvenue dans ACTELYO LAW HARNESS",
       description:
-        "Aidez-nous à améliorer AnythingLLM en répondant à quelques questions.",
+        "Personnalisez votre harnais juridique déontologique ACTELYO LAW HARNESS.",
     },
     home: {
       getStarted: "Commencer",
-      welcome: "Bienvenue",
+      welcome: "Bienvenue dans ACTELYO LAW HARNESS",
     },
     llm: {
-      title: "Préférence LLM",
+      title: "Moteur d'Inférence IA / LLM Juridique",
       description:
-        "AnythingLLM peut fonctionner avec de nombreux fournisseurs LLM. Ce sera le service qui traitera vos discussions.",
+        "ACTELYO LAW HARNESS s'interface avec vos modèles locaux ou souverains.",
     },
     userSetup: {
       title: "Configuration utilisateur",

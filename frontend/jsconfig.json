@@ -3,6 +3,8 @@
     "module": "commonjs",
     "target": "esnext",
     "jsx": "react",
+    "skipLibCheck": true,
+    "types": [],
     "paths": {
       "@/*": [
         "./src/*"

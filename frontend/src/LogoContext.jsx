@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import AnythingLLM from "./media/logo/anything-llm.png";
-import AnythingLLMDark from "./media/logo/anything-llm-dark.png";
+import ActelyoLogo from "./media/logo/actelyo-logo-nobg.png";
+import AnythingLLM from "./media/logo/actelyo-logo-nobg.png";
+import AnythingLLMDark from "./media/logo/actelyo-logo-nobg.png";
 import DefaultLoginLogoLight from "./media/illustrations/login-logo.svg";
 import DefaultLoginLogoDark from "./media/illustrations/login-logo-light.svg";
 import System from "./models/system";

@@ -1,7 +1,7 @@
 {
-  "name": "anything-llm",
+  "name": "actelyo-law-harness",
   "version": "1.16.1",
-  "description": "The best solution for turning private documents into a chat bot using off-the-shelf tools and commercially viable AI technologies.",
+  "description": "ACTELYO LAW HARNESS - Harnais d'Intelligence Juridique & RAG Déontologique Souverain pour Avocats.",
   "main": "index.js",
   "type": "module",
   "author": "Timothy Carambat (Mintplex Labs)",

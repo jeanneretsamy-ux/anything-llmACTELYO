@@ -58,7 +58,7 @@ export default {
     return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO";
   },
   discord: () => {
-    return "https://discord.com/invite/6UyHPeGZAC";
+    return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO/issues";
   },
   docs: (path = "") => {
     return `https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme`;
@@ -67,10 +67,10 @@ export default {
     return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme";
   },
   mailToMintplex: () => {
-    return "mailto:team@mintplexlabs.com";
+    return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO/issues";
   },
   hosting: () => {
-    return "https://my.mintplexlabs.com/aio-checkout?product=anythingllm";
+    return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO/blob/master/ACTELYO-LOCAL.md";
   },
   workspace: {
     chat: (slug, options = {}) => {

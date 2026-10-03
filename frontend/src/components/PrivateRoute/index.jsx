@@ -6,6 +6,7 @@ import paths from "@/utils/paths";
 import { AUTH_TIMESTAMP, AUTH_TOKEN, AUTH_USER } from "@/utils/constants";
 import { userFromStorage } from "@/utils/request";
 import System from "@/models/system";
+import BackendUnavailable from "@/components/BackendUnavailable";
 import UserMenu from "../UserMenu";
 import { KeyboardShortcutWrapper } from "@/utils/keyboardShortcuts";
 
@@ -13,6 +14,7 @@ import { KeyboardShortcutWrapper } from "@/utils/keyboardShortcuts";
 // When in single user mode we just bypass any authchecks.
 function useIsAuthenticated() {
   const [isAuthd, setIsAuthed] = useState(null);
+  const [serverUnavailable, setServerUnavailable] = useState(false);
   const [shouldRedirectToOnboarding, setShouldRedirectToOnboarding] =
     useState(false);
   const [multiUserMode, setMultiUserMode] = useState(false);
@@ -20,7 +22,9 @@ function useIsAuthenticated() {
   useEffect(() => {
     const validateSession = async () => {
       const onboardingComplete = await System.isOnboardingComplete();
-      const { MultiUserMode, RequiresAuth } = await System.keys();
+      const settings = await System.keys();
+      if (!settings) { setServerUnavailable(true); return; }
+      const { MultiUserMode, RequiresAuth } = settings;
       setMultiUserMode(MultiUserMode);
 
       // Check for the onboarding redirect condition
@@ -68,17 +72,18 @@ function useIsAuthenticated() {
 
       setIsAuthed(true);
     };
-    validateSession();
+    validateSession().catch(() => setServerUnavailable(true));
   }, []);
 
-  return { isAuthd, shouldRedirectToOnboarding, multiUserMode };
+  return { isAuthd, shouldRedirectToOnboarding, multiUserMode, serverUnavailable };
 }
 
 // Allows only admin to access the route and if in single user mode,
 // allows all users to access the route
 export function AdminRoute({ Component, hideUserMenu = false }) {
-  const { isAuthd, shouldRedirectToOnboarding, multiUserMode } =
+  const { isAuthd, shouldRedirectToOnboarding, multiUserMode, serverUnavailable } =
     useIsAuthenticated();
+  if (serverUnavailable) return <BackendUnavailable />;
   if (isAuthd === null) return <FullScreenLoader />;
 
   if (shouldRedirectToOnboarding) {
@@ -106,8 +111,9 @@ export function AdminRoute({ Component, hideUserMenu = false }) {
 // Allows manager and admin to access the route and if in single user mode,
 // allows all users to access the route
 export function ManagerRoute({ Component }) {
-  const { isAuthd, shouldRedirectToOnboarding, multiUserMode } =
+  const { isAuthd, shouldRedirectToOnboarding, multiUserMode, serverUnavailable } =
     useIsAuthenticated();
+  if (serverUnavailable) return <BackendUnavailable />;
   if (isAuthd === null) return <FullScreenLoader />;
 
   if (shouldRedirectToOnboarding) {
@@ -128,8 +134,9 @@ export function ManagerRoute({ Component }) {
 
 // Allows access only in single user mode — redirects to home in multi-user mode
 export function SingleUserRoute({ Component }) {
-  const { isAuthd, shouldRedirectToOnboarding, multiUserMode } =
+  const { isAuthd, shouldRedirectToOnboarding, multiUserMode, serverUnavailable } =
     useIsAuthenticated();
+  if (serverUnavailable) return <BackendUnavailable />;
   if (isAuthd === null) return <FullScreenLoader />;
 
   if (shouldRedirectToOnboarding) {
@@ -146,7 +153,8 @@ export function SingleUserRoute({ Component }) {
 }
 
 export default function PrivateRoute({ Component }) {
-  const { isAuthd, shouldRedirectToOnboarding } = useIsAuthenticated();
+  const { isAuthd, shouldRedirectToOnboarding, serverUnavailable } = useIsAuthenticated();
+  if (serverUnavailable) return <BackendUnavailable />;
   if (isAuthd === null) return <FullScreenLoader />;
 
   if (shouldRedirectToOnboarding) {

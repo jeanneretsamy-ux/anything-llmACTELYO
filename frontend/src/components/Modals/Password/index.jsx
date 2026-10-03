@@ -15,9 +15,9 @@ export default function PasswordModal({ mode = "single" }) {
     <div className="fixed inset-0 bg-zinc-950 light:bg-slate-50 flex flex-col items-center justify-center overflow-hidden">
       <img
         src={loginLogo}
-        alt="Logo"
+        alt="Actelyo LLMQushu"
         className={`max-h-[80px] ${isCustomLogo ? "rounded-lg" : ""}`}
-        style={{ objectFit: "contain" }}
+        style={{ objectFit: "contain", backgroundColor: isCustomLogo ? undefined : "#102a43", padding: isCustomLogo ? undefined : "8px", borderRadius: "8px" }}
       />
       {mode === "single" ? <SingleUserAuth /> : <MultiUserAuth />}
     </div>
@@ -47,6 +47,7 @@ export function usePasswordModal(notry = false) {
       }
 
       const settings = await System.keys();
+      if (!settings) { setAuth({ loading: false, requiresAuth: true, mode: "single", serverUnavailable: true }); return; }
       if (settings?.MultiUserMode) {
         const currentToken = window.localStorage.getItem(AUTH_TOKEN);
         if (!!currentToken) {

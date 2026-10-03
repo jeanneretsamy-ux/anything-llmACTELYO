@@ -3,26 +3,26 @@ const TRANSLATIONS = {
   onboarding: {
     survey: {
       email: "Adresse e-mail",
-      useCase: "Pour quel usage utiliserez-vous ACTELYO LAW HARNESS ?",
+      useCase: "Pour quel usage utiliserez-vous Actelyo LLMQushu ?",
       useCaseWork: "Pour le cabinet ou l'entreprise",
       useCasePersonal: "Pour un usage personnel ou recherche",
       useCaseOther: "Autre",
-      comment: "Comment avez-vous configuré ACTELYO LAW HARNESS ?",
+      comment: "Comment avez-vous configuré Actelyo LLMQushu ?",
       commentPlaceholder: "Actelyo ERP, recommandation, intégration juridique, etc.",
       skip: "Ignorer",
       thankYou: "Merci pour votre retour !",
-      title: "Bienvenue dans ACTELYO LAW HARNESS",
+      title: "Bienvenue dans Actelyo LLMQushu",
       description:
-        "Personnalisez votre harnais juridique déontologique ACTELYO LAW HARNESS.",
+        "Personnalisez votre harnais juridique déontologique Actelyo LLMQushu.",
     },
     home: {
       getStarted: "Commencer",
-      welcome: "Bienvenue dans ACTELYO LAW HARNESS",
+      welcome: "Bienvenue dans Actelyo LLMQushu",
     },
     llm: {
       title: "Moteur d'Inférence IA / LLM Juridique",
       description:
-        "ACTELYO LAW HARNESS s'interface avec vos modèles locaux ou souverains.",
+        "Actelyo LLMQushu s'interface avec vos modèles locaux ou souverains.",
     },
     userSetup: {
       title: "Configuration utilisateur",

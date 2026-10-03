@@ -268,14 +268,14 @@ function FeatureVerification({ children }) {
                     href="https://docs.anythingllm.com/beta-preview/overview"
                     className="underline text-blue-500"
                   >
-                    docs.anythingllm.com
+                    Documentation Actelyo
                   </a>{" "}
                   or email{" "}
                   <a
-                    href="mailto:team@mintplexlabs.com"
+                    href="https://github.com/jeanneretsamy-ux/anything-llmACTELYO/issues"
                     className="underline text-blue-500"
                   >
-                    team@mintplexlabs.com
+                    Support Actelyo
                   </a>
                 </p>
               </div>

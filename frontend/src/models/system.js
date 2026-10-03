@@ -418,7 +418,7 @@ const System = {
 
     if (!customAppName || !!error) {
       window.localStorage.removeItem(this.cacheKeys.customAppName);
-      return { appName: "ACTELYO LAW HARNESS", error: null };
+      return { appName: "Actelyo LLMQushu", error: null };
     }
 
     window.localStorage.setItem(

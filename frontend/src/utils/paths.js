@@ -55,16 +55,16 @@ export default {
     },
   },
   github: () => {
-    return "https://github.com/Mintplex-Labs/anything-llm";
+    return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO";
   },
   discord: () => {
     return "https://discord.com/invite/6UyHPeGZAC";
   },
   docs: (path = "") => {
-    return `https://docs.anythingllm.com${path}`;
+    return `https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme`;
   },
   chatModes: () => {
-    return "https://docs.anythingllm.com/features/chat-modes";
+    return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme";
   },
   mailToMintplex: () => {
     return "mailto:team@mintplexlabs.com";
@@ -239,17 +239,17 @@ export default {
       return `${this.website()}/me`;
     },
     noPrivateItems: () => {
-      return "https://docs.anythingllm.com/community-hub/faq#no-private-items";
+      return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme";
     },
   },
 
   // TODO: Migrate all docs.anythingllm.com links to the new docs.
   documentation: {
     mobileIntroduction: () => {
-      return "https://docs.anythingllm.com/mobile/overview";
+      return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme";
     },
     contextWindows: () => {
-      return "https://docs.anythingllm.com/chatting-with-documents/introduction#you-exceed-the-context-window---what-now";
+      return "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme";
     },
   },
 

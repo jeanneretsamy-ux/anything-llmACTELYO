@@ -4,6 +4,7 @@ const desktop = path.resolve(__dirname, '..');
 const env = {
   ...process.env,
   ELECTRON_BUILDER_CACHE: process.env.ELECTRON_BUILDER_CACHE || path.join(desktop, '.cache', 'builder'),
+  ELECTRON_BUILDER_COMPRESSION_LEVEL: process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL || '1',
 };
 for (const args of [
   [path.join(__dirname, 'prepare-runtime.cjs')],

@@ -12,7 +12,7 @@ export default function OnboardingHome() {
     <div className="min-h-screen flex flex-col items-center bg-zinc-950 light:bg-slate-50 text-white light:text-slate-800 px-6">
       <header className="flex items-center gap-4 pt-10">
         <img src={ActelyoLogo} alt="Actelyo" className="h-16 w-auto rounded-lg p-2" style={{ backgroundColor: "#102a43" }} />
-        <span className="font-medium text-xl">Actelyo LLMQushu</span>
+        <span className="font-medium text-xl">Actelyo RAG</span>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center text-center w-full max-w-3xl py-12">
         <h1 className="font-medium text-4xl md:text-6xl leading-tight">{t("onboarding.home.welcome")}</h1>

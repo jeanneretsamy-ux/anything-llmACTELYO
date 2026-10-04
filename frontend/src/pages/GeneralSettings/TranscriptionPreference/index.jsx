@@ -32,7 +32,7 @@ const PROVIDERS = [
       "Transcribe audio using any OpenAI-compatible API via custom configuration.",
   },
   {
-    name: "Actelyo LLMQushu Built-In",
+    name: "Actelyo RAG Built-In",
     value: "local",
     logo: AnythingLLMIcon,
     options: (settings) => <NativeTranscriptionOptions settings={settings} />,

@@ -418,7 +418,7 @@ const System = {
 
     if (!customAppName || !!error) {
       window.localStorage.removeItem(this.cacheKeys.customAppName);
-      return { appName: "Actelyo LLMQushu", error: null };
+      return { appName: "Actelyo RAG", error: null };
     }
 
     window.localStorage.setItem(

@@ -73,7 +73,7 @@ export default function Footer() {
               className="transition-all duration-300 p-2 rounded-full bg-theme-sidebar-footer-icon hover:bg-theme-sidebar-footer-icon-hover"
               aria-label="Docs"
               data-tooltip-id="footer-item"
-              data-tooltip-content="Open Actelyo LLMQushu help docs"
+              data-tooltip-content="Open Actelyo RAG help docs"
             >
               <BookOpen
                 weight="fill"
@@ -89,7 +89,7 @@ export default function Footer() {
               className="transition-all duration-300 p-2 rounded-full bg-theme-sidebar-footer-icon hover:bg-theme-sidebar-footer-icon-hover"
               aria-label="Support Actelyo"
               data-tooltip-id="footer-item"
-              data-tooltip-content="Support Actelyo LLMQushu"
+              data-tooltip-content="Support Actelyo RAG"
             >
               <Info
                 weight="fill"

@@ -1,6 +1,6 @@
 {
-  "name": "Actelyo LLMQushu",
-  "short_name": "Actelyo LLMQushu",
+  "name": "Actelyo RAG",
+  "short_name": "Actelyo RAG",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/",

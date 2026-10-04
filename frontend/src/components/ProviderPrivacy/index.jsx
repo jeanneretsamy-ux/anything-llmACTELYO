@@ -12,7 +12,7 @@ function defaultProvider(providerString) {
       ? titleCase(sentenceCase(String(providerString)))
       : "Unknown",
     description: [
-      `"${providerString}" has no known data handling policy defined in Actelyo LLMQushu.`,
+      `"${providerString}" has no known data handling policy defined in Actelyo RAG.`,
     ],
     logo: AnythingLLMIcon,
   };

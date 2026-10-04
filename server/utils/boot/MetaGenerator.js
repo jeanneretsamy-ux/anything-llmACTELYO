@@ -27,8 +27,8 @@ class MetaGenerator {
   #customConfig = null;
 
   #defaultManifest = {
-    name: "Actelyo LLMQushu",
-    short_name: "Actelyo LLMQushu",
+    name: "Actelyo RAG",
+    short_name: "Actelyo RAG",
     display: "standalone",
     orientation: "portrait",
     start_url: "/",
@@ -59,21 +59,21 @@ class MetaGenerator {
       {
         tag: "title",
         props: null,
-        content: "Actelyo LLMQushu",
+        content: "Actelyo RAG",
       },
 
       {
         tag: "meta",
         props: {
           name: "title",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
       {
         tag: "meta",
         props: {
           description: "title",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
 
@@ -87,14 +87,14 @@ class MetaGenerator {
         tag: "meta",
         props: {
           property: "og:title",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
       {
         tag: "meta",
         props: {
           property: "og:description",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
       {
@@ -119,14 +119,14 @@ class MetaGenerator {
         tag: "meta",
         props: {
           property: "twitter:title",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
       {
         tag: "meta",
         props: {
           property: "twitter:description",
-          content: "Actelyo LLMQushu",
+          content: "Actelyo RAG",
         },
       },
       {
@@ -245,7 +245,7 @@ class MetaGenerator {
             props: null,
             content:
               customTitle ??
-              "Actelyo LLMQushu",
+              "Actelyo RAG",
           };
         }
         // Override meta title
@@ -256,7 +256,7 @@ class MetaGenerator {
               name: "title",
               content:
                 customTitle ??
-                "Actelyo LLMQushu",
+                "Actelyo RAG",
             },
           };
         }
@@ -268,7 +268,7 @@ class MetaGenerator {
               property: "og:title",
               content:
                 customTitle ??
-                "Actelyo LLMQushu",
+                "Actelyo RAG",
             },
           };
         }
@@ -280,7 +280,7 @@ class MetaGenerator {
               property: "twitter:title",
               content:
                 customTitle ??
-                "Actelyo LLMQushu",
+                "Actelyo RAG",
             },
           };
         }
@@ -346,7 +346,7 @@ class MetaGenerator {
       const { SystemSettings } = require("../../models/systemSettings");
       const manifestName = await SystemSettings.getValueOrFallback(
         { label: "meta_page_title" },
-        "Actelyo LLMQushu"
+        "Actelyo RAG"
       );
       const faviconURL = await SystemSettings.getValueOrFallback(
         { label: "meta_page_favicon" },

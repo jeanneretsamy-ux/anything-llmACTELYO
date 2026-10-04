@@ -31,7 +31,7 @@ export default function BrowserNativeSTT({ sendCommand }) {
   function startSTTSession() {
     if (!isMicrophoneAvailable) {
       alert(
-        "Actelyo LLMQushu does not have access to microphone. Please enable for this site to use this feature."
+        "Actelyo RAG does not have access to microphone. Please enable for this site to use this feature."
       );
       return;
     }

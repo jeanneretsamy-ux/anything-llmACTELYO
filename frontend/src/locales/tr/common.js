@@ -3,18 +3,18 @@ const TRANSLATIONS = {
   onboarding: {
     survey: {
       email: "E-posta adresiniz nedir?",
-      useCase: "Actelyo LLMQushu'yi ne için kullanacaksınız?",
+      useCase: "Actelyo RAG'yi ne için kullanacaksınız?",
       useCaseWork: "İş için",
       useCasePersonal: "Kişisel kullanım için",
       useCaseOther: "Diğer",
-      comment: "Actelyo LLMQushu'yi nasıl duydunuz?",
+      comment: "Actelyo RAG'yi nasıl duydunuz?",
       commentPlaceholder:
         "Reddit, Twitter, GitHub, YouTube vb. - Bizi nasıl buldunuz?",
       skip: "Anketi Atla",
       thankYou: "Geri bildiriminiz için teşekkür ederiz!",
-      title: "Actelyo LLMQushu'ye Hoş Geldiniz",
+      title: "Actelyo RAG'ye Hoş Geldiniz",
       description:
-        "Actelyo LLMQushu'yi ihtiyaçlarınıza göre oluşturmamıza yardımcı olun. İsteğe bağlı.",
+        "Actelyo RAG'yi ihtiyaçlarınıza göre oluşturmamıza yardımcı olun. İsteğe bağlı.",
     },
     home: {
       getStarted: "Başla",
@@ -23,7 +23,7 @@ const TRANSLATIONS = {
     llm: {
       title: "LLM Tercihi",
       description:
-        "Actelyo LLMQushu birçok LLM sağlayıcısıyla çalışabilir. Bu, sohbeti yöneten hizmet olacaktır.",
+        "Actelyo RAG birçok LLM sağlayıcısıyla çalışabilir. Bu, sohbeti yöneten hizmet olacaktır.",
     },
     userSetup: {
       title: "Kullanıcı Kurulumu",
@@ -98,7 +98,7 @@ const TRANSLATIONS = {
     interface: "Arayüz Tercihleri",
     branding: "Marka & Beyaz Etiketleme",
     chat: "Sohbet",
-    "mobile-app": "Actelyo LLMQushu Mobil",
+    "mobile-app": "Actelyo RAG Mobil",
     "community-hub": {
       title: "Topluluk Merkezi",
       trending: "Popüler olanları keşfedin",
@@ -158,7 +158,7 @@ const TRANSLATIONS = {
       add: "Yeni mesaj ekle",
       save: "Mesajları Kaydet",
       heading: "Bana açıkla",
-      body: "Actelyo LLMQushu'nin faydalarını",
+      body: "Actelyo RAG'nin faydalarını",
     },
     delete: {
       title: "Çalışma Alanını Sil",
@@ -763,7 +763,7 @@ const TRANSLATIONS = {
       "intelligent-skill-selection": {
         title: "Akıllı Becerilerin Seçimi",
         description:
-          "Her sorgu için sınırsız araç kullanımı ve \"cut token\" kullanımını %80'e kadar azaltma imkanı sunar — Actelyo LLMQushu, her talep için doğru becerileri otomatik olarak seçer.",
+          "Her sorgu için sınırsız araç kullanımı ve \"cut token\" kullanımını %80'e kadar azaltma imkanı sunar — Actelyo RAG, her talep için doğru becerileri otomatik olarak seçer.",
         "max-tools": {
           title: "Max Araçları",
           description:
@@ -801,7 +801,7 @@ const TRANSLATIONS = {
   api: {
     title: "API anahtarları",
     description:
-      "API anahtarları, bu Actelyo LLMQushu örneğine programatik olarak erişmeye ve yönetmeye olanak tanır.",
+      "API anahtarları, bu Actelyo RAG örneğine programatik olarak erişmeye ve yönetmeye olanak tanır.",
     link: "API dokümantasyonunu okuyun",
     generate: "Yeni API Anahtarı Oluştur",
     empty: "API anahtarları bulunamadı",
@@ -815,7 +815,7 @@ const TRANSLATIONS = {
       close: "Kapat",
       create: "API anahtarı oluştur",
       helper:
-        "Oluşturulduktan sonra API anahtarı, bu Actelyo LLMQushu örneğine programatik olarak erişmek ve onu yapılandırmak için kullanılabilir.",
+        "Oluşturulduktan sonra API anahtarı, bu Actelyo RAG örneğine programatik olarak erişmek ve onu yapılandırmak için kullanılabilir.",
       name: {
         label: "Ad",
         placeholder: "Üretim entegrasyonu",
@@ -840,7 +840,7 @@ const TRANSLATIONS = {
   llm: {
     title: "LLM Tercihi",
     description:
-      "Bu, tercih ettiğiniz LLM sohbet ve gömme sağlayıcısının kimlik bilgileri ile ayarlarıdır. Bu anahtarların güncel ve doğru olması önemlidir; aksi takdirde Actelyo LLMQushu doğru çalışmayacaktır.",
+      "Bu, tercih ettiğiniz LLM sohbet ve gömme sağlayıcısının kimlik bilgileri ile ayarlarıdır. Bu anahtarların güncel ve doğru olması önemlidir; aksi takdirde Actelyo RAG doğru çalışmayacaktır.",
     provider: "LLM Sağlayıcısı",
     providers: {
       azure_openai: {
@@ -862,7 +862,7 @@ const TRANSLATIONS = {
       "Bu, tercih ettiğiniz transkripsiyon modeli sağlayıcısının kimlik bilgileri ve ayarlarıdır. Anahtarların güncel ve doğru olması önemlidir; aksi takdirde medya dosyaları ve sesler transkribe edilemez.",
     provider: "Transkripsiyon Sağlayıcısı",
     "warn-start":
-      "Sınırlı RAM veya CPU'ya sahip makinelerde yerel Whisper modelini kullanmak, medya dosyalarını işlerken Actelyo LLMQushu'nin duraksamasına neden olabilir.",
+      "Sınırlı RAM veya CPU'ya sahip makinelerde yerel Whisper modelini kullanmak, medya dosyalarını işlerken Actelyo RAG'nin duraksamasına neden olabilir.",
     "warn-recommend":
       "En az 2GB RAM öneriyoruz ve 10MB üzerinde dosya yüklememeye dikkat edin.",
     "warn-end":
@@ -873,7 +873,7 @@ const TRANSLATIONS = {
     "desc-start":
       "Yerel olarak gömme mekanizmasını desteklemeyen bir LLM kullanıyorsanız, metinleri gömmek için ek kimlik bilgileri girmeniz gerekebilir.",
     "desc-end":
-      "Gömme, metni vektörlere dönüştürme sürecidir. Dosyalarınızın ve komutlarınızın işlenebilmesi için Actelyo LLMQushu, bu kimlik bilgilerine ihtiyaç duyar.",
+      "Gömme, metni vektörlere dönüştürme sürecidir. Dosyalarınızın ve komutlarınızın işlenebilmesi için Actelyo RAG, bu kimlik bilgilerine ihtiyaç duyar.",
     provider: {
       title: "Embedding Sağlayıcısı",
     },
@@ -899,7 +899,7 @@ const TRANSLATIONS = {
   vector: {
     title: "Vektör Veritabanı",
     description:
-      "Actelyo LLMQushu örneğinizin nasıl çalışacağını belirleyen kimlik bilgileri ve ayarları burada bulunur. Bu anahtarların güncel ve doğru olması önemlidir.",
+      "Actelyo RAG örneğinizin nasıl çalışacağını belirleyen kimlik bilgileri ve ayarları burada bulunur. Bu anahtarların güncel ve doğru olması önemlidir.",
     provider: {
       title: "Vektör Veritabanı Sağlayıcısı",
       description: "LanceDB için ek bir yapılandırma gerekmez.",
@@ -944,7 +944,7 @@ const TRANSLATIONS = {
   privacy: {
     title: "Gizlilik & Veri İşleme",
     description:
-      "Bağlantılı üçüncü taraf sağlayıcılarla ve Actelyo LLMQushu ile verilerinizin nasıl ele alındığını burada yapılandırabilirsiniz.",
+      "Bağlantılı üçüncü taraf sağlayıcılarla ve Actelyo RAG ile verilerinizin nasıl ele alındığını burada yapılandırabilirsiniz.",
     anonymous: "Anonim Telemetri Etkin",
   },
   connectors: {
@@ -1105,22 +1105,22 @@ const TRANSLATIONS = {
       fetching: "Alınıyor...",
       "fetch-website": "Web sitesini al",
       "privacy-notice":
-        "Bu dosyalar, bu Actelyo LLMQushu örneğinde çalışan belge işleyiciye yüklenecektir. Bu dosyalar üçüncü taraflarla paylaşılmaz.",
+        "Bu dosyalar, bu Actelyo RAG örneğinde çalışan belge işleyiciye yüklenecektir. Bu dosyalar üçüncü taraflarla paylaşılmaz.",
     },
     pinning: {
       what_pinning: "Belge sabitleme nedir?",
       pin_explained_block1:
-        "Actelyo LLMQushu'de bir belgeyi <b>sabitlediğinizde</b>, belgenin tüm içeriğini LLM'nin tam olarak anlaması için prompt pencerenize enjekte ederiz.",
+        "Actelyo RAG'de bir belgeyi <b>sabitlediğinizde</b>, belgenin tüm içeriğini LLM'nin tam olarak anlaması için prompt pencerenize enjekte ederiz.",
       pin_explained_block2:
         "Bu, <b>büyük bağlam modelleri</b> veya bilgi tabanı için kritik olan küçük dosyalarla en iyi şekilde çalışır.",
       pin_explained_block3:
-        "Actelyo LLMQushu'den varsayılan olarak istediğiniz yanıtları alamıyorsanız, sabitleme tek tıklamayla daha yüksek kaliteli yanıtlar almanın harika bir yoludur.",
+        "Actelyo RAG'den varsayılan olarak istediğiniz yanıtları alamıyorsanız, sabitleme tek tıklamayla daha yüksek kaliteli yanıtlar almanın harika bir yoludur.",
       accept: "Tamam, anladım",
     },
     watching: {
       what_watching: "Bir belgeyi izlemek ne yapar?",
       watch_explained_block1:
-        "Actelyo LLMQushu'de bir belgeyi <b>izlediğinizde</b>, belge içeriğinizi orijinal kaynağından düzenli aralıklarla <i>otomatik olarak</i> senkronize ederiz. Bu, dosyanın yönetildiği her çalışma alanında içeriği otomatik olarak günceller.",
+        "Actelyo RAG'de bir belgeyi <b>izlediğinizde</b>, belge içeriğinizi orijinal kaynağından düzenli aralıklarla <i>otomatik olarak</i> senkronize ederiz. Bu, dosyanın yönetildiği her çalışma alanında içeriği otomatik olarak günceller.",
       watch_explained_block2:
         "Bu özellik şu anda yalnızca çevrimiçi tabanlı içeriği desteklemektedir ve manuel olarak yüklenen belgeler için kullanılamayacaktır.",
       watch_explained_block3_start: "Hangi belgelerin izlendiğini ",
@@ -1296,7 +1296,7 @@ const TRANSLATIONS = {
         edit_description: "Bu belleğin içeriğini güncelleyin.",
         label: "Bellek",
         placeholder:
-          "Örneğin, kullanıcının adı Joe, kullanıcı Actelyo LLMQushu üzerinde çalışıyor, vb.",
+          "Örneğin, kullanıcının adı Joe, kullanıcı Actelyo RAG üzerinde çalışıyor, vb.",
         create: "Yarat",
         save: "Kaydet",
         cancel: "İptal et",
@@ -1345,16 +1345,16 @@ const TRANSLATIONS = {
   customization: {
     interface: {
       title: "Arayüz Tercihleri",
-      description: "Actelyo LLMQushu için arayüz tercihlerinizi ayarlayın.",
+      description: "Actelyo RAG için arayüz tercihlerinizi ayarlayın.",
     },
     branding: {
       title: "Marka & Beyaz Etiketleme",
       description:
-        "Actelyo LLMQushu örneğinizi özel markalamayla beyaz etiketleyin.",
+        "Actelyo RAG örneğinizi özel markalamayla beyaz etiketleyin.",
     },
     chat: {
       title: "Sohbet",
-      description: "Actelyo LLMQushu için sohbet tercihlerinizi ayarlayın.",
+      description: "Actelyo RAG için sohbet tercihlerinizi ayarlayın.",
       auto_submit: {
         title: "Konuşma Girişini Otomatik Gönder",
         description:
@@ -1393,7 +1393,7 @@ const TRANSLATIONS = {
       "display-language": {
         title: "Görüntüleme Dili",
         description:
-          "Actelyo LLMQushu'nin kullanıcı arayüzünü görüntülemek için tercih edilen dili seçin - çeviriler mevcut olduğunda.",
+          "Actelyo RAG'nin kullanıcı arayüzünü görüntülemek için tercih edilen dili seçin - çeviriler mevcut olduğunda.",
       },
       logo: {
         title: "Marka Logosu",
@@ -1540,7 +1540,7 @@ const TRANSLATIONS = {
         unauthenticated: {
           title: "Kimlik Doğrulama Gerekli",
           description:
-            "Öğeleri yayınlamadan önce Actelyo LLMQushu Topluluk Hub'ına kimlik doğrulaması yapmanız gerekir.",
+            "Öğeleri yayınlamadan önce Actelyo RAG Topluluk Hub'ına kimlik doğrulaması yapmanız gerekir.",
           button: "Topluluk Hub'ına Bağlan",
         },
       },
@@ -1564,7 +1564,7 @@ const TRANSLATIONS = {
     password: {
       title: "Şifre Koruması",
       description:
-        "Actelyo LLMQushu örneğinizi bir şifre ile koruyun. Bu şifreyi unutmanız hâlinde kurtarma yöntemi yoktur, bu yüzden mutlaka güvende saklayın.",
+        "Actelyo RAG örneğinizi bir şifre ile koruyun. Bu şifreyi unutmanız hâlinde kurtarma yöntemi yoktur, bu yüzden mutlaka güvende saklayın.",
       "password-label": "Örnek şifresi",
     },
   },
@@ -1578,7 +1578,7 @@ const TRANSLATIONS = {
   telegram: {
     title: "Telegram Bot'u",
     description:
-      "Actelyo LLMQushu örneğinizi Telegram ile bağlantılandırarak, herhangi bir cihazdan çalışma alanlarınızla sohbet edebilmelisiniz.",
+      "Actelyo RAG örneğinizi Telegram ile bağlantılandırarak, herhangi bir cihazdan çalışma alanlarınızla sohbet edebilmelisiniz.",
     setup: {
       step1: {
         title: "1. Adım: Telegram botunuzu oluşturun",

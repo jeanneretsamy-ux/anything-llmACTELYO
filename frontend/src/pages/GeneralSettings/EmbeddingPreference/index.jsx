@@ -44,12 +44,12 @@ import { useTranslation } from "react-i18next";
 
 const EMBEDDERS = [
   {
-    name: "Actelyo LLMQushu Embedder",
+    name: "Actelyo RAG Embedder",
     value: "native",
     logo: AnythingLLMIcon,
     options: (settings) => <NativeEmbeddingOptions settings={settings} />,
     description:
-      "Use the built-in embedding provider for Actelyo LLMQushu. Zero setup!",
+      "Use the built-in embedding provider for Actelyo RAG. Zero setup!",
   },
   {
     name: "OpenAI",

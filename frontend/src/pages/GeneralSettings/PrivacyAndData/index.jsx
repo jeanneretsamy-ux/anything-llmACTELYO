@@ -112,7 +112,7 @@ function TelemetryLogs({ settings }) {
             dedicated to building the best solution for integrating AI and
             documents privately and securely. If you do decide to turn off
             telemetry all we ask is to consider sending us feedback and thoughts
-            so that we can continue to improve Actelyo LLMQushu for you.{" "}
+            so that we can continue to improve Actelyo RAG for you.{" "}
             <a
               href="https://github.com/jeanneretsamy-ux/anything-llmACTELYO/issues"
               className="underline text-blue-400"

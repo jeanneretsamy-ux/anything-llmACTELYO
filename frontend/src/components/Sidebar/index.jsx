@@ -45,14 +45,14 @@ export default function Sidebar() {
         <div className="overflow-hidden h-full">
           <div className="flex shrink-0 w-full justify-center my-[10px]">
             <div className="flex w-[250px] min-w-[250px]">
-              <Link to={paths.home()} aria-label="Actelyo LLMQushu" className="flex items-center gap-3">
+              <Link to={paths.home()} aria-label="Actelyo RAG" className="flex items-center gap-3">
                 <img
                   src={logo}
                   alt="Logo"
                   className={`rounded-lg h-16 w-16 object-contain transition-opacity duration-500 ${showSidebar ? "opacity-100" : "opacity-0"}`}
                   style={isCustomLogo ? {} : { backgroundColor: "#102a43", padding: "6px" }}
                 />
-                <span className="text-sm font-medium text-theme-text-primary">Actelyo LLMQushu</span>
+                <span className="text-sm font-medium text-theme-text-primary">Actelyo RAG</span>
               </Link>
             </div>
           </div>

@@ -15,7 +15,7 @@ export default function PasswordModal({ mode = "single" }) {
     <div className="fixed inset-0 bg-zinc-950 light:bg-slate-50 flex flex-col items-center justify-center overflow-hidden">
       <img
         src={loginLogo}
-        alt="Actelyo LLMQushu"
+        alt="Actelyo RAG"
         className={`max-h-[80px] ${isCustomLogo ? "rounded-lg" : ""}`}
         style={{ objectFit: "contain", backgroundColor: isCustomLogo ? undefined : "#102a43", padding: isCustomLogo ? undefined : "8px", borderRadius: "8px" }}
       />

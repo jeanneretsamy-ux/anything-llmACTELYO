@@ -33,6 +33,8 @@
       "installerIcon": "branding/actelyo.ico",
       "uninstallerIcon": "branding/actelyo.ico",
       "deleteAppDataOnUninstall": false,
+      "useZip": true,
+      "differentialPackage": false,
       "artifactName": "Actelyo-LLMQushu-Setup-${version}-${arch}.${ext}"
     }
   }

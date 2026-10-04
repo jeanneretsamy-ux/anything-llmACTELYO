@@ -14,7 +14,7 @@ function freePort() {
   });
 }
 
-function createRuntime(runtimeDir, dataDir, status) {
+function createRuntime(runtimeDir, dataDir, status, options = {}) {
   const children = new Set();
   let stopped = false;
   let serviceFailure = null;
@@ -50,7 +50,13 @@ function createRuntime(runtimeDir, dataDir, status) {
     fs.mkdirSync(settingsDir, { recursive: true });
     const envPath = path.join(settingsDir, '.env');
     if (!fs.existsSync(envPath)) fs.writeFileSync(envPath, '# Actelyo LLMQushu\n', { flag: 'wx' });
-    const apiPort = await freePort();
+    const apiPort = options.apiPort ?? await freePort();
+    if (!Number.isInteger(apiPort) || apiPort < 1024 || apiPort > 65535) throw new Error('Port local invalide.');
+    await new Promise((resolve, reject) => {
+      const probe = net.createServer();
+      probe.once('error', () => reject(new Error(`Le port ${apiPort} est déjà utilisé. Choisissez un autre port ou ouvrez le service déjà démarré.`)));
+      probe.listen(apiPort, '127.0.0.1', () => probe.close(resolve));
+    });
     let collectorPort = await freePort();
     while (collectorPort === apiPort) collectorPort = await freePort();
     const env = {

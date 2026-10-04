@@ -29,3 +29,15 @@ Le script de préparation vérifie les dépendances et génère Prisma. Les outi
 Cette application ne contient pas de modèle de langage. Configurer un fournisseur dans l'interface, ou connecter Actelyo Legal Inference/Ollama. Les téléchargements de modèles peuvent nécessiter Internet. Une signature Authenticode de l'installateur nécessite un certificat Actelyo ; aucune identité d'éditeur tiers n'est réutilisée. La mise à jour est manuelle via un nouvel installateur Actelyo.
 
 La compilation actuelle utilise `win.signExecutable: false` et conserve l'édition de l'icône et des métadonnées. Retirer ce réglage et fournir le certificat Actelyo pour une diffusion signée. Pour une vérification avec des données isolées, lancer l'exécutable avec `--data-dir=C:\chemin\de\test`.
+
+## Version web locale : Actelyo RAG
+
+Après compilation du frontend et préparation du runtime ci-dessus, lancer
+`node desktop/scripts/start-web.cjs`. Le navigateur ouvre l’interface complète
+sur `http://127.0.0.1:3001`. Le serveur et le collecteur sont liés uniquement à
+la boucle locale ; `--port=PORT` et `--data-dir=CHEMIN` sont disponibles.
+Le profil web par défaut est séparé des données de l’application Desktop.
+La commande conserve les données entre redémarrages ; Ctrl+C arrête ses services.
+Configurer le modèle et l’embedder dans l’application. Aucun modèle n’est téléchargé
+par ce lanceur. Le nom du nouvel espace web est Actelyo RAG ; l’ancien installateur
+Desktop publié précédemment conserve son nom jusqu’à une nouvelle compilation.

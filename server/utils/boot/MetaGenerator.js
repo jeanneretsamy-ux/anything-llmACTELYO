@@ -27,8 +27,8 @@ class MetaGenerator {
   #customConfig = null;
 
   #defaultManifest = {
-    name: "AnythingLLM",
-    short_name: "AnythingLLM",
+    name: "Actelyo LLMQushu",
+    short_name: "Actelyo LLMQushu",
     display: "standalone",
     orientation: "portrait",
     start_url: "/",
@@ -59,21 +59,21 @@ class MetaGenerator {
       {
         tag: "title",
         props: null,
-        content: "AnythingLLM | Your personal LLM trained on anything",
+        content: "Actelyo LLMQushu",
       },
 
       {
         tag: "meta",
         props: {
           name: "title",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
       {
         tag: "meta",
         props: {
           description: "title",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
 
@@ -81,20 +81,20 @@ class MetaGenerator {
       { tag: "meta", props: { property: "og:type", content: "website" } },
       {
         tag: "meta",
-        props: { property: "og:url", content: "https://anythingllm.com" },
+        props: { property: "og:url", content: "https://github.com/jeanneretsamy-ux/anything-llmACTELYO" },
       },
       {
         tag: "meta",
         props: {
           property: "og:title",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
       {
         tag: "meta",
         props: {
           property: "og:description",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
       {
@@ -102,7 +102,7 @@ class MetaGenerator {
         props: {
           property: "og:image",
           content:
-            "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/images/promo.png",
+            "/actelyo-logo-nobg.png",
         },
       },
 
@@ -113,20 +113,20 @@ class MetaGenerator {
       },
       {
         tag: "meta",
-        props: { property: "twitter:url", content: "https://anythingllm.com" },
+        props: { property: "twitter:url", content: "https://github.com/jeanneretsamy-ux/anything-llmACTELYO" },
       },
       {
         tag: "meta",
         props: {
           property: "twitter:title",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
       {
         tag: "meta",
         props: {
           property: "twitter:description",
-          content: "AnythingLLM | Your personal LLM trained on anything",
+          content: "Actelyo LLMQushu",
         },
       },
       {
@@ -134,7 +134,7 @@ class MetaGenerator {
         props: {
           property: "twitter:image",
           content:
-            "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/images/promo.png",
+            "/actelyo-logo-nobg.png",
         },
       },
 
@@ -245,7 +245,7 @@ class MetaGenerator {
             props: null,
             content:
               customTitle ??
-              "AnythingLLM | Your personal LLM trained on anything",
+              "Actelyo LLMQushu",
           };
         }
         // Override meta title
@@ -256,7 +256,7 @@ class MetaGenerator {
               name: "title",
               content:
                 customTitle ??
-                "AnythingLLM | Your personal LLM trained on anything",
+                "Actelyo LLMQushu",
             },
           };
         }
@@ -268,7 +268,7 @@ class MetaGenerator {
               property: "og:title",
               content:
                 customTitle ??
-                "AnythingLLM | Your personal LLM trained on anything",
+                "Actelyo LLMQushu",
             },
           };
         }
@@ -280,7 +280,7 @@ class MetaGenerator {
               property: "twitter:title",
               content:
                 customTitle ??
-                "AnythingLLM | Your personal LLM trained on anything",
+                "Actelyo LLMQushu",
             },
           };
         }
@@ -346,7 +346,7 @@ class MetaGenerator {
       const { SystemSettings } = require("../../models/systemSettings");
       const manifestName = await SystemSettings.getValueOrFallback(
         { label: "meta_page_title" },
-        "AnythingLLM"
+        "Actelyo LLMQushu"
       );
       const faviconURL = await SystemSettings.getValueOrFallback(
         { label: "meta_page_favicon" },

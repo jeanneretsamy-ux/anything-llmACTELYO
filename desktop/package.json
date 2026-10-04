@@ -1,0 +1,39 @@
+{
+  "name": "actelyo-llmqushu-desktop",
+  "productName": "Actelyo LLMQushu",
+  "version": "1.0.0",
+  "description": "Actelyo LLMQushu — application locale de documents et conversations",
+  "author": "Actelyo",
+  "license": "MIT",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "prepare:runtime": "node scripts/prepare-runtime.cjs",
+    "build:win": "npm run prepare:runtime && electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "fr.actelyo.llmqushu",
+    "productName": "Actelyo LLMQushu",
+    "directories": { "output": "release", "buildResources": "branding" },
+    "files": ["main.cjs", "runtime.cjs", "preload.cjs", "splash.html", "splash.js", "branding/**"],
+    "extraResources": [{ "from": "runtime", "to": "runtime" }, { "from": "../LICENSE", "to": "LICENSE-core.txt" }],
+    "npmRebuild": false,
+    "win": { "icon": "branding/actelyo.ico", "target": "nsis", "executableName": "Actelyo LLMQushu", "signExecutable": false },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Actelyo LLMQushu",
+      "installerIcon": "branding/actelyo.ico",
+      "uninstallerIcon": "branding/actelyo.ico",
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Actelyo-LLMQushu-Setup-${version}-${arch}.${ext}"
+    }
+  }
+}

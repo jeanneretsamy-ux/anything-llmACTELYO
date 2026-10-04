@@ -1,4 +1,6 @@
-const WATCH_DIRECTORY = require("path").resolve(__dirname, "../hotdir");
+const WATCH_DIRECTORY = process.env.ACTELYO_WORK_DIR
+  ? require("path").join(process.env.ACTELYO_WORK_DIR, "hotdir")
+  : require("path").resolve(__dirname, "../hotdir");
 
 const ACCEPTED_MIMES = {
   "text/plain": [".txt", ".md", ".org", ".adoc", ".rst"],

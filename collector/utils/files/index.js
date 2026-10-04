@@ -156,11 +156,13 @@ function writeToServerDocuments({
 // force remove them.
 async function wipeCollectorStorage() {
   const cleanHotDir = new Promise((resolve) => {
-    const directory = path.resolve(__dirname, "../../hotdir");
+    const directory = process.env.ACTELYO_WORK_DIR
+      ? path.join(process.env.ACTELYO_WORK_DIR, "hotdir")
+      : path.resolve(__dirname, "../../hotdir");
 
-    if (!fs.existsSync(directory)) resolve();
+    if (!fs.existsSync(directory)) return resolve();
     fs.readdir(directory, (err, files) => {
-      if (err) resolve();
+      if (err) return resolve();
 
       for (const file of files) {
         if (file === "__HOTDIR__.md") continue;
@@ -173,9 +175,11 @@ async function wipeCollectorStorage() {
   });
 
   const cleanTmpDir = new Promise((resolve) => {
-    const directory = path.resolve(__dirname, "../../storage/tmp");
+    const directory = process.env.ACTELYO_WORK_DIR
+      ? path.join(process.env.ACTELYO_WORK_DIR, "tmp")
+      : path.resolve(__dirname, "../../storage/tmp");
     fs.readdir(directory, (err, files) => {
-      if (err) resolve();
+      if (err) return resolve();
 
       for (const file of files) {
         if (file === ".placeholder") continue;

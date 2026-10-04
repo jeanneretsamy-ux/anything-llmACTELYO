@@ -1,19 +1,19 @@
 {
-  "name": "actelyo-law-harness",
+  "name": "actelyo-llmqushu",
   "version": "1.16.1",
-  "description": "ACTELYO LAW HARNESS - Harnais d'Intelligence Juridique & RAG Déontologique Souverain pour Avocats.",
+  "description": "Actelyo LLMQushu — documents, RAG et conversations locales.",
   "main": "index.js",
   "type": "module",
   "author": "Timothy Carambat (Mintplex Labs)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mintplex-labs/anything-llm.git"
+    "url": "git+https://github.com/jeanneretsamy-ux/anything-llmACTELYO.git"
   },
   "bugs": {
-    "url": "https://github.com/mintplex-labs/anything-llm/issues"
+    "url": "https://github.com/jeanneretsamy-ux/anything-llmACTELYO/issues"
   },
-  "homepage": "https://github.com/mintplex-labs/anything-llm#readme",
+  "homepage": "https://github.com/jeanneretsamy-ux/anything-llmACTELYO#readme",
   "engines": {
     "node": ">=18"
   },

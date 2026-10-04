@@ -18,7 +18,7 @@ import { createPortal } from "react-dom";
 
 export default function Sidebar() {
   const { user } = useUser();
-  const { logo } = useLogo();
+  const { logo, isCustomLogo } = useLogo();
   const sidebarRef = useRef(null);
   const { showSidebar, setShowSidebar, canToggleSidebar } = useSidebarToggle();
   const {
@@ -43,20 +43,22 @@ export default function Sidebar() {
           />
         )}
         <div className="overflow-hidden h-full">
-          <div className="flex shrink-0 w-full justify-center my-[18px]">
+          <div className="flex shrink-0 w-full justify-center my-[10px]">
             <div className="flex w-[250px] min-w-[250px]">
-              <Link to={paths.home()} aria-label="Home">
+              <Link to={paths.home()} aria-label="Actelyo LLMQushu" className="flex items-center gap-3">
                 <img
                   src={logo}
                   alt="Logo"
-                  className={`rounded max-h-[24px] object-contain transition-opacity duration-500 ${showSidebar ? "opacity-100" : "opacity-0"}`}
+                  className={`rounded-lg h-16 w-16 object-contain transition-opacity duration-500 ${showSidebar ? "opacity-100" : "opacity-0"}`}
+                  style={isCustomLogo ? {} : { backgroundColor: "#102a43", padding: "6px" }}
                 />
+                <span className="text-sm font-medium text-theme-text-primary">Actelyo LLMQushu</span>
               </Link>
             </div>
           </div>
           <div
             ref={sidebarRef}
-            className="relative m-[16px] rounded-[16px] bg-theme-bg-sidebar light:bg-slate-200 border-[2px] border-theme-sidebar-border light:border-none min-w-[250px] p-[10px] h-[calc(100%-76px)]"
+            className="relative m-[16px] rounded-[16px] bg-theme-bg-sidebar light:bg-slate-200 border-[2px] border-theme-sidebar-border light:border-none min-w-[250px] p-[10px] h-[calc(100%-100px)]"
           >
             <div className="flex flex-col h-full overflow-hidden">
               <div className="flex-grow flex flex-col min-w-[235px] min-h-0">
@@ -123,8 +125,8 @@ export function SidebarMobileHeader() {
           <img
             src={logo}
             alt="Logo"
-            className="block mx-auto h-6 w-auto"
-            style={{ maxHeight: "40px", objectFit: "contain" }}
+            className="block mx-auto h-10 w-auto rounded-lg"
+            style={{ maxHeight: "40px", objectFit: "contain", ...(isCustomLogo ? {} : { backgroundColor: "#102a43", padding: "4px" }) }}
           />
         </div>
         <div className="w-12"></div>
@@ -154,8 +156,8 @@ export function SidebarMobileHeader() {
                 <img
                   src={logo}
                   alt="Logo"
-                  className="rounded w-full max-h-[40px]"
-                  style={{ objectFit: "contain" }}
+                  className="rounded-lg h-16 w-16"
+                  style={{ objectFit: "contain", ...(isCustomLogo ? {} : { backgroundColor: "#102a43", padding: "6px" }) }}
                 />
               </div>
               {(!user || user?.role !== "default") && (

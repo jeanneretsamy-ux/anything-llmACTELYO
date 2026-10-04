@@ -1,6 +1,6 @@
 process.env.NODE_ENV === "development"
   ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-  : require("dotenv").config();
+  : require("dotenv").config({ path: process.env.ACTELYO_ENV_PATH || ".env" });
 
 require("./utils/logger")();
 require("./utils/boot/patchSdkTimeouts")();

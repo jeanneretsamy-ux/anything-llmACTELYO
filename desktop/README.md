@@ -24,7 +24,7 @@ npm ci
 npm run build:win
 ```
 
-Le script de préparation vérifie les dépendances et génère Prisma. L'installateur est produit dans `desktop/release`. Il contient la licence du cœur du projet. Les bibliothèques embarquées conservent leurs licences.
+Le script de préparation vérifie les dépendances et génère Prisma. Les outils de fabrication sont mis en cache dans `desktop/.cache/builder`, sans dépendre des permissions d'un ancien cache Windows. L'installateur est produit dans `desktop/release`. Il contient la licence du cœur du projet. Les bibliothèques embarquées conservent leurs licences.
 
 Cette application ne contient pas de modèle de langage. Configurer un fournisseur dans l'interface, ou connecter Actelyo Legal Inference/Ollama. Les téléchargements de modèles peuvent nécessiter Internet. Une signature Authenticode de l'installateur nécessite un certificat Actelyo ; aucune identité d'éditeur tiers n'est réutilisée. La mise à jour est manuelle via un nouvel installateur Actelyo.
 

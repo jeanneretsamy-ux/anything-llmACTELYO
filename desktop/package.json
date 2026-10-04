@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "prepare:runtime": "node scripts/prepare-runtime.cjs",
-    "build:win": "npm run prepare:runtime && electron-builder --win nsis --x64 --publish never"
+    "build:win": "node scripts/build-win.cjs"
   },
   "devDependencies": {
     "electron": "44.5.1",

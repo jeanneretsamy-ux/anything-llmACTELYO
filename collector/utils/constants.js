@@ -13,6 +13,9 @@ const ACCEPTED_MIMES = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
     ".docx",
   ],
+  "application/vnd.ms-word.document.macroEnabled.12": [".docm"],
+  "application/zip": [".zip"],
+  "application/x-zip-compressed": [".zip"],
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
     ".pptx",
   ],
@@ -57,6 +60,8 @@ const SUPPORTED_FILETYPE_CONVERTERS = {
   ".pdf": "./convert/asPDF/index.js",
 
   ".docx": "./convert/asDocx.js",
+  ".docm": "./convert/asDocx.js",
+  ".zip": "./convert/asZip.js",
   // TODO: Create asDoc.js that works for standard MS Word files.
   // ".doc": "./convert/asDoc.js",
 

@@ -214,7 +214,7 @@ app.all("*", function (_, response) {
 });
 
 app
-  .listen(COLLECTOR_PORT, async () => {
+  .listen(COLLECTOR_PORT, process.env.ACTELYO_BIND_HOST || "0.0.0.0", async () => {
     await wipeCollectorStorage();
     console.log(`Document processor app listening on port ${COLLECTOR_PORT}`);
   })

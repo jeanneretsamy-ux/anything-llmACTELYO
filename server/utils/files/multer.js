@@ -11,7 +11,9 @@ const { normalizePath, sanitizeFileName } = require(".");
 const fileUploadStorage = multer.diskStorage({
   destination: function (_, __, cb) {
     const uploadOutput =
-      process.env.NODE_ENV === "development"
+      process.env.ACTELYO_WORK_DIR
+        ? path.join(process.env.ACTELYO_WORK_DIR, "hotdir")
+        : process.env.NODE_ENV === "development"
         ? path.resolve(__dirname, `../../../collector/hotdir`)
         : path.resolve(process.env.STORAGE_DIR, `../../collector/hotdir`);
     cb(null, uploadOutput);

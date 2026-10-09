@@ -1,6 +1,6 @@
 {
-  "name": "AnythingLLM",
-  "short_name": "AnythingLLM",
+  "name": "Actelyo RAG",
+  "short_name": "Actelyo RAG",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/",

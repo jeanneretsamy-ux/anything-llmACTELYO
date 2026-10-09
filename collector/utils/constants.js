@@ -1,4 +1,6 @@
-const WATCH_DIRECTORY = require("path").resolve(__dirname, "../hotdir");
+const WATCH_DIRECTORY = process.env.ACTELYO_WORK_DIR
+  ? require("path").join(process.env.ACTELYO_WORK_DIR, "hotdir")
+  : require("path").resolve(__dirname, "../hotdir");
 
 const ACCEPTED_MIMES = {
   "text/plain": [".txt", ".md", ".org", ".adoc", ".rst"],
@@ -11,6 +13,9 @@ const ACCEPTED_MIMES = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
     ".docx",
   ],
+  "application/vnd.ms-word.document.macroEnabled.12": [".docm"],
+  "application/zip": [".zip"],
+  "application/x-zip-compressed": [".zip"],
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
     ".pptx",
   ],
@@ -55,6 +60,8 @@ const SUPPORTED_FILETYPE_CONVERTERS = {
   ".pdf": "./convert/asPDF/index.js",
 
   ".docx": "./convert/asDocx.js",
+  ".docm": "./convert/asDocx.js",
+  ".zip": "./convert/asZip.js",
   // TODO: Create asDoc.js that works for standard MS Word files.
   // ".doc": "./convert/asDoc.js",
 

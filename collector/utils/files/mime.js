@@ -3,7 +3,6 @@ class MimeDetector {
   nonTextTypes = ["multipart", "model", "audio", "video", "font"];
   badMimes = [
     "application/octet-stream",
-    "application/zip",
     "application/pkcs8",
     "application/vnd.microsoft.portable-executable",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX are binaries and need to be handled explicitly.

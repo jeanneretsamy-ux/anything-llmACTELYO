@@ -12,6 +12,9 @@
 **/.env
 **/.env.*
 **/bundleinspector.html
+desktop/runtime/
+desktop/release/
+desktop/.cache/
 **/tmp/**
 **/.log
 !docker/.env.example

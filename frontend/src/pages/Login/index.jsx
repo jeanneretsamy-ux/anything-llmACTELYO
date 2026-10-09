@@ -1,4 +1,5 @@
 import React from "react";
+import BackendUnavailable from "@/components/BackendUnavailable";
 import PasswordModal, { usePasswordModal } from "@/components/Modals/Password";
 import { FullScreenLoader } from "@/components/Preloader";
 import { Navigate } from "react-router-dom";
@@ -17,8 +18,9 @@ import useSimpleSSO from "@/hooks/useSimpleSSO";
 export default function Login() {
   const query = useQuery();
   const { loading: ssoLoading, ssoConfig } = useSimpleSSO();
-  const { loading, requiresAuth, mode } = usePasswordModal(!!query.get("nt"));
+  const { loading, requiresAuth, mode, serverUnavailable } = usePasswordModal(!!query.get("nt"));
 
+  if (serverUnavailable) return <BackendUnavailable />;
   if (loading || ssoLoading) return <FullScreenLoader />;
 
   // If simple SSO is enabled and no login is allowed, redirect to the SSO login page.

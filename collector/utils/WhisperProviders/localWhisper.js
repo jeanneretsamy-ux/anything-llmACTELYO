@@ -66,7 +66,9 @@ class LocalWhisper {
       const wavefile = require("wavefile");
       const { FFMPEGWrapper } = require("./ffmpeg");
       const ffmpeg = new FFMPEGWrapper();
-      const outFolder = path.resolve(__dirname, `../../storage/tmp`);
+      const outFolder = process.env.ACTELYO_WORK_DIR
+        ? path.join(process.env.ACTELYO_WORK_DIR, "tmp")
+        : path.resolve(__dirname, `../../storage/tmp`);
       if (!fs.existsSync(outFolder))
         fs.mkdirSync(outFolder, { recursive: true });
 

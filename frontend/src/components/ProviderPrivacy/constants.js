@@ -324,7 +324,7 @@ const VECTOR_DB_PROVIDER_PRIVACY_MAP = {
   lancedb: {
     name: "LanceDB",
     description: [
-      "Your vectors and document text are stored privately on this instance of AnythingLLM.",
+      "Your vectors and document text are stored privately on this instance of Actelyo RAG.",
     ],
     logo: LanceDbLogo,
   },
@@ -332,9 +332,9 @@ const VECTOR_DB_PROVIDER_PRIVACY_MAP = {
 
 const EMBEDDING_ENGINE_PROVIDER_PRIVACY_MAP = {
   native: {
-    name: "AnythingLLM Embedder",
+    name: "Actelyo RAG Embedder",
     description: [
-      "Your document text is embedded privately on this instance of AnythingLLM.",
+      "Your document text is embedded privately on this instance of Actelyo RAG.",
     ],
     logo: AnythingLLMIcon,
   },

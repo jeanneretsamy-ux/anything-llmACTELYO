@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path'),cp=require('child_process');
 const desktop=__dirname,root=path.resolve(desktop,'..'),out=path.join(desktop,'dist/Actelyo RAG Desktop'),runtime=path.join(out,'resources/runtime');
-function copy(src,dest,filter=()=>true){fs.mkdirSync(dest,{recursive:true});for(const e of fs.readdirSync(src,{withFileTypes:true})){if(!filter(e.name,e.isDirectory()))continue;const a=path.join(src,e.name),b=path.join(dest,e.name);if(e.isDirectory())copy(a,b,filter);else fs.copyFileSync(a,b)}}
-const clean=(name,dir)=>!['.git','.env','storage','hotdir','outputs','tmp'].includes(name)&&!(!dir&&/\.(?:gguf|safetensors|db|sqlite|sqlite3)$/i.test(name));
+function copy(src,dest,filter=()=>true){fs.mkdirSync(dest,{recursive:true});for(const e of fs.readdirSync(src,{withFileTypes:true})){if(!filter(e.name,e.isDirectory(),src))continue;const a=path.join(src,e.name),b=path.join(dest,e.name);if(e.isDirectory())copy(a,b,filter);else fs.copyFileSync(a,b)}}
+const clean=(name,dir,src)=>!['.git','.env','hotdir','outputs','tmp'].includes(name)&&!(name==='storage'&&path.basename(src)==='server')&&!(!dir&&/\.(?:gguf|safetensors|db|sqlite|sqlite3)$/i.test(name));
 (async()=>{if(process.platform!=='win32')throw Error('Construire sur Windows pour produire les dépendances natives Windows.');
  if(!process.env.ACTELYO_RAG_RUNTIME){for(const folder of ['frontend','server','collector']){const cwd=path.join(root,folder);for(const command of ['yarn install --frozen-lockfile',...(folder==='frontend'?['yarn build']:[])]){const r=cp.spawnSync('cmd.exe',['/d','/s','/c',command],{cwd,stdio:'inherit'});if(r.status!==0)throw Error('Échec '+folder+': '+command)}}}
  const electron=path.join(desktop,'node_modules/electron/dist');copy(electron,out,n=>!['resources','electron.exe'].includes(n));fs.copyFileSync(path.join(electron,'electron.exe'),path.join(out,'Actelyo RAG.exe'));fs.mkdirSync(path.join(out,'resources'),{recursive:true});

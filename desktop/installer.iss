@@ -12,13 +12,15 @@ OutputDir=dist
 OutputBaseFilename=Actelyo-RAG-Desktop-Setup-1.0.1-x64
 Compression=lzma2/fast
 SolidCompression=yes
+LZMAUseSeparateProcess=yes
+LZMANumBlockThreads=4
 WizardStyle=modern
 UninstallDisplayIcon={app}\Actelyo RAG.exe
 CloseApplications=yes
 [Languages]
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 [Files]
-Source: "dist\Actelyo RAG Desktop\*"; DestDir: "{app}"; Excludes: "Uninstall*,unins*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\Actelyo RAG Desktop\*"; DestDir: "{app}"; Excludes: "Uninstall*,unins*,*.map,*.d.ts,*\test\*,*\tests\*,*\__tests__\*"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
 Name: "{autoprograms}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"
 Name: "{autodesktop}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"

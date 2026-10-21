@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - "server/scripts/rag-eval.cjs"
+      - "server/scripts/prepare-legal-corpus.cjs"
       - "server/utils/ragEvaluation.cjs"
       - "server/__tests__/ragEvaluation.node.test.cjs"
       - "examples/rag-eval/**"
@@ -10,6 +11,7 @@ on:
   pull_request:
     paths:
       - "server/scripts/rag-eval.cjs"
+      - "server/scripts/prepare-legal-corpus.cjs"
       - "server/utils/ragEvaluation.cjs"
       - "server/__tests__/ragEvaluation.node.test.cjs"
       - "examples/rag-eval/**"

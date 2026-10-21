@@ -5,6 +5,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { validateBenchmark, scoreCase, summarize, prometheus } = require("../utils/ragEvaluation.cjs");
 const { options, evaluate } = require("../scripts/rag-eval.cjs");
+const { validateArticles, renderArticle, prepare } = require("../scripts/prepare-legal-corpus.cjs");
 
 test("Recall@k and MRR use document rank with multilingual cases", () => {
   const fr = scoreCase(["article-1", "article-3"], ["article-2", "article-1", "article-3"]);
@@ -63,4 +64,28 @@ test("evaluation calls the real vector-search contract and keeps queries out of 
   assert.match(prometheus(report), /actelyo_rag_eval_recall_at_1\{language="fr"\} 1/);
   assert.throws(() => prometheus({ byLanguage: { 'x"bad': { count: 1 } } }), /Langue invalide/);
   await assert.rejects(() => evaluate(config, "test-key", async () => ({ ok: false, status: 503 })), /Aucun rapport partiel/);
+});
+
+test("legal importer preserves bilingual article boundaries and separates repealed law", (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "actelyo-legal-import-"));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const input = path.join(dir, "source.json");
+  const output = path.join(dir, "prepared");
+  fs.copyFileSync(path.resolve(__dirname, "../../examples/rag-eval/legal-articles.sample.json"), input);
+  const manifest = prepare(input, output);
+  assert.deepEqual(manifest.counts, { current: 1, repealed: 1 });
+  const current = fs.readFileSync(path.join(output, manifest.articles[0].file), "utf8");
+  const repealed = fs.readFileSync(path.join(output, manifest.articles[1].file), "utf8");
+  assert.match(current, /## العربية/);
+  assert.match(current, /Page source : 1/);
+  assert.match(repealed, /ABROGÉ — NE PAS UTILISER/);
+  assert.match(manifest.articles[0].file, /^current\//);
+  assert.match(manifest.articles[1].file, /^repealed\//);
+  assert.throws(() => prepare(input, output), /inexistant/);
+  assert.throws(() => validateArticles({ schemaVersion: 1, articles: [
+    { id: "1", citation: "X", jurisdiction: "FR", text_fr: "texte" },
+  ] }), /is_repealed/);
+  assert.match(renderArticle(validateArticles({ schemaVersion: 1, articles: [
+    { id: "3", citation: "X", jurisdiction: "FR", is_repealed: false, text_fr: "texte" },
+  ] })[0]), /## Français/);
 });

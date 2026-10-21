@@ -1,5 +1,19 @@
 # Évaluer la recherche Actelyo RAG en local
 
+## Préparer un corpus juridique structuré
+
+Le [projet de référence de recherche juridique arabe/anglais](https://github.com/AyaMYousef/-LLM-RAG-Arabic-Legal-Document-Q-A) décrit une recherche par article, avec citation, page source et indication d'abrogation. Actelyo reprend **ce principe** avec un convertisseur original ; ni le code ni le corpus du projet de référence ne sont inclus. N'importer que des documents que vous avez le droit d'utiliser.
+
+Fournir un JSON `schemaVersion: 1` contenant `articles` (1 à 10 000 entrées, 50 Mo maximum). Chaque article exige un `id` stable en caractères ASCII (`article_number` peut servir d'identifiant), `citation`, `jurisdiction`, `is_repealed` (`true` ou `false`) et au moins un de `text_fr`, `text_en`, `text_ar`. Les champs `source_name`, `source_page` (numéro de page positif), `book`, `chapter` et `section` sont facultatifs. [L'exemple](examples/rag-eval/legal-articles.sample.json) contient uniquement deux articles fictifs.
+
+```powershell
+npm run rag:prepare-legal -- --input .\examples\rag-eval\legal-articles.sample.json --output .\rag-evaluation-reports\articles-prepares
+```
+
+Le dossier de sortie doit être nouveau ; son parent est créé au besoin. Le convertisseur écrit un Markdown par article, en préservant ses versions linguistiques et ses références, un `manifest.json` avec empreintes SHA-256, puis sépare `current/` et `repealed/`. Importer les fichiers de `current/` dans un workspace Actelyo RAG ; créer un workspace historique séparé pour `repealed/` seulement si nécessaire. La mention « en vigueur » reflète **la déclaration du corpus importé**, pas une vérification automatique des textes officiels. La réponse juridique doit toujours être contrôlée sur les sources et à la date pertinente. Le convertisseur fonctionne localement et ne transmet aucune donnée.
+
+## Mesurer la recherche du workspace
+
 Le banc d'essai interroge l'API `POST /v1/workspace/:slug/vector-search` du **vrai workspace** Actelyo RAG. Il mesure Recall@1, Recall@3, Recall@5, Hit@k, MRR et les latences p50/p95, globalement et par langue. Les requêtes ne figurent pas dans le rapport ; les identifiants des sources et les jugements restent dans des fichiers locaux. Aucun appel à Groq, MLflow, Langfuse ou à un serveur distant n'est effectué par cet outil.
 
 1. Dans Actelyo RAG, indexer les documents du workspace et choisir son modèle d'embeddings. Un modèle multilingue compatible avec le fournisseur local configuré peut servir aux jeux français, anglais et arabes. Le choix du modèle et de la base vectorielle reste celui du workspace ; ce banc d'essai ne les remplace pas par E5 ou FAISS.

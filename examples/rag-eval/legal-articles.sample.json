@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "articles": [
+    {
+      "id": "demo-1",
+      "citation": "Démonstration, article 1",
+      "jurisdiction": "Exemple fictif",
+      "is_repealed": false,
+      "source_name": "Corpus de démonstration",
+      "source_page": 1,
+      "text_fr": "Ce texte fictif sert uniquement à tester l'import.",
+      "text_en": "This fictional text is only for testing the importer.",
+      "text_ar": "هذا نص خيالي لاختبار الاستيراد فقط."
+    },
+    {
+      "id": "demo-2",
+      "citation": "Démonstration, article 2",
+      "jurisdiction": "Exemple fictif",
+      "is_repealed": true,
+      "source_name": "Corpus de démonstration",
+      "source_page": 2,
+      "text_fr": "Ce texte fictif est signalé comme abrogé."
+    }
+  ]
+}

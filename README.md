@@ -1,5 +1,7 @@
 <a name="readme-top"></a>
 
+> **Actelyo RAG local** — [Évaluation reproductible de la recherche multilingue](RAG_EVALUATION.md) : Recall@1/3/5, MRR, latence, rapport local et export Prometheus. Elle utilise l'API vectorielle et les modèles déjà configurés dans le workspace.
+
 > [!NOTE]
 > We are also working on [Open Computer](/open-computer) which gives an entire computer environment for AI Agents to use.
 >

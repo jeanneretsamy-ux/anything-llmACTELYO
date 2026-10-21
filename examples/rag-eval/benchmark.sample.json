@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "fr-exemple-1",
+      "language": "fr",
+      "query": "Quelle pièce décrit la constitution de la société ?",
+      "relevant": ["exemple-statuts"]
+    },
+    {
+      "id": "ar-exemple-1",
+      "language": "ar",
+      "query": "ما هي الوثيقة التي تصف تأسيس الشركة؟",
+      "relevant": ["exemple-statuts"]
+    }
+  ]
+}

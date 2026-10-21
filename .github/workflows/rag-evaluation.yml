@@ -1,0 +1,28 @@
+name: RAG evaluation checks
+on:
+  push:
+    paths:
+      - "server/scripts/rag-eval.cjs"
+      - "server/utils/ragEvaluation.cjs"
+      - "server/__tests__/ragEvaluation.node.test.cjs"
+      - "examples/rag-eval/**"
+      - ".github/workflows/rag-evaluation.yml"
+  pull_request:
+    paths:
+      - "server/scripts/rag-eval.cjs"
+      - "server/utils/ragEvaluation.cjs"
+      - "server/__tests__/ragEvaluation.node.test.cjs"
+      - "examples/rag-eval/**"
+      - ".github/workflows/rag-evaluation.yml"
+permissions:
+  contents: read
+jobs:
+  evaluation-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm run rag:eval:test

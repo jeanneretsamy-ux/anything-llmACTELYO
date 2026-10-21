@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const { createRuntime } = require('./runtime.cjs');
@@ -23,6 +23,35 @@ let origin;
 let starting = false;
 let quitting = false;
 
+async function prepareLegalCorpus() {
+  const chosen = await dialog.showOpenDialog(window, {
+    title: 'Choisir un corpus juridique JSON autorisé',
+    properties: ['openFile'],
+    filters: [{ name: 'Corpus JSON', extensions: ['json'] }],
+  });
+  if (chosen.canceled || !chosen.filePaths[0]) return;
+  const destination = await dialog.showOpenDialog(window, {
+    title: 'Choisir le dossier où préparer les articles',
+    properties: ['openDirectory', 'createDirectory'],
+  });
+  if (destination.canceled || !destination.filePaths[0]) return;
+  const runtimeDir = app.isPackaged ? path.join(process.resourcesPath, 'runtime') : path.join(__dirname, 'runtime');
+  const output = path.join(destination.filePaths[0], `articles-juridiques-${Date.now()}`);
+  try {
+    const { prepare } = require(path.join(runtimeDir, 'server/scripts/prepare-legal-corpus.cjs'));
+    const manifest = prepare(chosen.filePaths[0], output);
+    const response = await dialog.showMessageBox(window, {
+      type: 'info', title: 'Corpus préparé', buttons: ['Ouvrir le dossier', 'Fermer'], defaultId: 0,
+      message: `${manifest.counts.current} article(s) courant(s) et ${manifest.counts.repealed} article(s) abrogé(s) préparés.`,
+      detail: 'Importez le contenu de current/ dans Actelyo RAG. Les articles abrogés sont séparés dans repealed/. Vérifiez les sources et leur date avant usage juridique.',
+    });
+    if (response.response === 0) await shell.openPath(output);
+  } catch (error) {
+    await dialog.showMessageBox(window, { type: 'error', title: 'Import impossible',
+      message: 'Le corpus juridique n’a pas pu être préparé.', detail: String(error.message) });
+  }
+}
+
 if (!locked) app.quit();
 else {
   app.on('second-instance', () => {
@@ -32,6 +61,7 @@ else {
     Menu.setApplicationMenu(Menu.buildFromTemplate([
       { label: 'Actelyo RAG', submenu: [
         { label: 'Dossier de données locales', click: () => shell.openPath(app.getPath('userData')) },
+        { label: 'Préparer un corpus juridique…', click: () => prepareLegalCorpus() },
         { type: 'separator' }, { role: 'quit', label: 'Quitter' },
       ] },
       { label: 'Édition', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },

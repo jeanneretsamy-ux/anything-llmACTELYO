@@ -1,7 +1,7 @@
 {
   "name": "actelyo-rag-desktop",
   "productName": "Actelyo RAG",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Actelyo RAG — application locale de documents et conversations",
   "author": "Actelyo",
   "license": "MIT",

@@ -15,6 +15,30 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def file_sha256(file: Path) -> str:
+    digest = hashlib.sha256()
+    with file.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def verify_model_manifest(directory: Path) -> None:
+    manifest_file = directory / "actelyo-model-manifest.json"
+    if not manifest_file.exists():
+        return  # A manually supplied local E5 model is also supported.
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    if manifest.get("repo_id") != MODEL or not isinstance(manifest.get("files_sha256"), dict):
+        raise ValueError("Provenance du modèle E5 invalide")
+    base = directory.resolve(strict=True)
+    for relative, expected in manifest["files_sha256"].items():
+        if not isinstance(relative, str) or not isinstance(expected, str) or len(expected) != 64:
+            raise ValueError("Entrée de provenance du modèle invalide")
+        file = (base / relative).resolve(strict=True)
+        if not file.is_relative_to(base) or not file.is_file() or file_sha256(file) != expected:
+            raise ValueError(f"Modèle E5 modifié : {relative}")
+
+
 def passages(record: dict[str, Any], size: int = 1200, overlap: int = 120) -> list[dict[str, Any]]:
     text = record["text"]
     chunks = []
@@ -72,6 +96,8 @@ class E5Embedder:
     def __init__(self, model_path: str = MODEL):
         from sentence_transformers import SentenceTransformer
         self.model_path = model_path
+        if Path(model_path).is_dir():
+            verify_model_manifest(Path(model_path))
         self.model = SentenceTransformer(model_path, local_files_only=True)
 
     def encode(self, texts: list[str], kind: str):

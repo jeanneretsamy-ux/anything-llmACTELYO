@@ -16,7 +16,7 @@ jobs:
       - run: python -m pip install -r legal_rag/requirements.txt
       - run: python -m unittest discover -s legal_rag/tests -v
       - name: Download multilingual E5 into an isolated CI cache
-        run: python -c "from huggingface_hub import snapshot_download; snapshot_download('intfloat/multilingual-e5-base', local_dir='legal_rag/data/models/multilingual-e5-base')"
+        run: python -m legal_rag.cli download-model --output legal_rag/data/models/multilingual-e5-base
       - name: Build an actual FAISS index from fictional articles
         run: |
           node server/scripts/prepare-legal-corpus.cjs --input examples/rag-eval/legal-articles.sample.json --output legal_rag/data/corpus

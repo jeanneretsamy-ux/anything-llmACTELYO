@@ -10,7 +10,7 @@ Depuis la racine du dépôt, préparer un JSON conforme à [l'exemple fictif](..
 npm run rag:prepare-legal -- --input .\mon-corpus-autorise.json --output .\legal_rag\data\corpus
 ```
 
-Sur Linux, installer les dépendances Python de `requirements.txt`. Sur Windows, FAISS recommande sa distribution Conda CPU x86-64 ; installer `faiss-cpu` par Conda/Pixi, puis les autres dépendances Python de ce dossier. Télécharger volontairement le modèle `intfloat/multilingual-e5-base` dans `legal_rag/data/models/multilingual-e5-base` ; le programme charge uniquement les fichiers présents localement (`local_files_only=True`). Il faut de l'espace disque et de la mémoire pour E5 et FAISS. Docker offre l'autre chemin d'installation, avec `legal_rag/compose.yaml`, après dépôt du modèle dans `data/models/` et construction de l'index.
+Sur Linux, installer les dépendances Python de `requirements.txt`. Sur Windows, FAISS recommande sa distribution Conda CPU x86-64 ; installer `faiss-cpu` par Conda/Pixi, puis les autres dépendances Python de ce dossier. Télécharger volontairement le modèle `intfloat/multilingual-e5-base` avec `py -m legal_rag.cli download-model --output .\legal_rag\data\models\multilingual-e5-base`. Cette commande fixe la révision distante et conserve les SHA-256 des fichiers ; elle exige le réseau une fois. Le programme de recherche charge ensuite uniquement les fichiers présents localement (`local_files_only=True`). Il faut de l'espace disque et de la mémoire pour E5 et FAISS. Docker offre l'autre chemin d'installation, avec `legal_rag/compose.yaml`, après dépôt du modèle dans `data/models/` et construction de l'index.
 
 ```powershell
 $env:ACTELYO_E5_MODEL = (Resolve-Path .\legal_rag\data\models\multilingual-e5-base).Path

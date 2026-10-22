@@ -26,7 +26,7 @@ def optional_trace(name: str, metadata: dict):
     if parsed.scheme != "http" or parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
         raise HTTPException(400, "Langfuse doit être auto-hébergé sur ce poste")
     from langfuse import get_client
-    os.environ["LANGFUSE_HOST"] = host
+    os.environ["LANGFUSE_BASE_URL"] = host
     return get_client().start_as_current_observation(name=name, as_type="retriever", metadata=metadata)
 
 

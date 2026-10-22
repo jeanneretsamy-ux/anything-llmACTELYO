@@ -6,9 +6,39 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
+import tempfile
 from time import perf_counter
 
-from .core import E5Embedder, LegalIndex, build_index
+from .core import MODEL, E5Embedder, LegalIndex, build_index, file_sha256
+
+
+def download_model(output: Path) -> dict:
+    """Explicit user-initiated fetch; the inference path never uses network."""
+    from huggingface_hub import HfApi, snapshot_download
+    output = output.resolve()
+    if output.exists():
+        raise ValueError("Choisissez un nouveau dossier de modèle inexistant")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    revision = HfApi().model_info(MODEL).sha
+    if not isinstance(revision, str) or len(revision) != 40:
+        raise ValueError("Révision du modèle E5 invalide")
+    stage = Path(tempfile.mkdtemp(prefix="actelyo-e5-", dir=output.parent))
+    try:
+        snapshot_download(MODEL, revision=revision, local_dir=stage)
+        files = {}
+        for file in stage.rglob("*"):
+            if file.is_file() and ".cache" not in file.parts:
+                if not file.resolve().is_relative_to(stage.resolve()):
+                    raise ValueError("Le modèle téléchargé contient un lien hors du dossier")
+                files[file.relative_to(stage).as_posix()] = file_sha256(file)
+        provenance = {"repo_id": MODEL, "revision": revision, "files_sha256": files}
+        (stage / "actelyo-model-manifest.json").write_text(json.dumps(provenance, indent=2), encoding="utf-8")
+        os.replace(stage, output)
+        return provenance
+    finally:
+        if stage.exists():
+            shutil.rmtree(stage)
 
 
 def evaluate(index: LegalIndex, cases: list[dict], top_k: int = 5) -> dict:
@@ -46,6 +76,8 @@ def evaluate(index: LegalIndex, cases: list[dict], top_k: int = 5) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="command", required=True)
+    download = commands.add_parser("download-model")
+    download.add_argument("--output", type=Path, required=True)
     build = commands.add_parser("index")
     build.add_argument("--corpus", type=Path, required=True)
     build.add_argument("--output", type=Path, required=True)
@@ -55,6 +87,10 @@ def main() -> None:
     benchmark.add_argument("--output", type=Path, required=True)
     benchmark.add_argument("--mlflow-local", type=Path, help="Journaliser uniquement dans un dossier MLflow local")
     args = parser.parse_args()
+    if args.command == "download-model":
+        provenance = download_model(args.output)
+        print(f"Modèle {provenance['repo_id']} téléchargé ; révision {provenance['revision']}")
+        return
     embedder = E5Embedder(os.environ.get("ACTELYO_E5_MODEL", "intfloat/multilingual-e5-base"))
     if args.command == "index":
         result = build_index(args.corpus, args.output, embedder)

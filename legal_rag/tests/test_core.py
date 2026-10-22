@@ -4,7 +4,7 @@ import shutil
 import unittest
 from uuid import uuid4
 
-from legal_rag.core import load_corpus, passages
+from legal_rag.core import MODEL, load_corpus, passages, sha256, verify_model_manifest
 from legal_rag.cli import evaluate
 
 
@@ -42,6 +42,21 @@ class LegalRagTests(unittest.TestCase):
         self.assertGreater(len(parts), 1)
         self.assertIn("fin unique", parts[-1]["text"])
         self.assertTrue(all(len(p["text"]) <= 1250 for p in parts))
+
+    def test_downloaded_model_manifest_detects_tampering(self):
+        folder = Path(__file__).resolve().parents[1] / "data" / f"model-test-{uuid4().hex}"
+        folder.mkdir()
+        try:
+            weights = folder / "weights.bin"
+            weights.write_bytes(b"fictional weights")
+            (folder / "actelyo-model-manifest.json").write_text(json.dumps({
+                "repo_id": MODEL, "files_sha256": {"weights.bin": sha256(b"fictional weights")}}))
+            verify_model_manifest(folder)
+            weights.write_bytes(b"changed")
+            with self.assertRaises(ValueError):
+                verify_model_manifest(folder)
+        finally:
+            shutil.rmtree(folder)
 
 
 if __name__ == "__main__":

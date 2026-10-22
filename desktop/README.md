@@ -16,4 +16,8 @@ Pour reconditionner un runtime Windows préparé et audité, définir `ACTELYO_R
 
 Le serveur et le collector n'écoutent que sur 127.0.0.1. Les clés et documents restent dans le profil utilisateur. `--data-dir=C:\chemin\profil-isole` permet un test indépendant sans modifier le profil courant.
 
+## OpenRAG facultatif
+
+Le connecteur disponible dans [legal_rag](../legal_rag/README.md#openrag-facultatif) cible précisément [langflow-ai/openrag](https://github.com/langflow-ai/openrag) et son API locale `POST /v1/search`. Il permet au service juridique Actelyo de rechercher dans une instance OpenRAG déjà installée, avec une clé API et un filtre de connaissance. Le Desktop 1.0.2 ne démarre pas ce service Python et ne contient pas OpenRAG, WSL, Docker ou Podman ; le connecteur ne constitue donc pas encore une option activable dans l'EXE. L'installation Windows d'OpenRAG et le lancement du service juridique sont des étapes distinctes à valider avant de publier un nouvel installateur.
+
 [Catalogue public des installateurs et modèles](https://jeanneretsamy-ux.github.io/actelyo-downloads/)

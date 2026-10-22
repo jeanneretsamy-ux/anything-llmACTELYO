@@ -1,0 +1,11 @@
+{
+  "cases": [
+    {
+      "id": "demo-question-1",
+      "answer": "Dans cet exemple fictif, l'article de démonstration est cité [1].",
+      "sources": [{"id": "demo-1"}],
+      "relevant": ["demo-1"],
+      "human_review_correct": true
+    }
+  ]
+}

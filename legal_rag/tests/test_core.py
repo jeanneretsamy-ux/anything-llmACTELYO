@@ -35,6 +35,7 @@ class LegalRagTests(unittest.TestCase):
         self.assertEqual(report["recall_at_1"], 0)
         self.assertEqual(report["recall_at_3"], 1)
         self.assertEqual(report["mrr"], 0.5)
+        self.assertEqual(report["by_language"]["unspecified"]["mrr"], 0.5)
 
     def test_long_article_is_split_without_losing_tail(self):
         text = "début " + "milieu " * 500 + "fin unique"

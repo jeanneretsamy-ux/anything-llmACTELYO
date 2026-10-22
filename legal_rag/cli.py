@@ -11,6 +11,22 @@ import tempfile
 from time import perf_counter
 
 from .core import MODEL, E5Embedder, LegalIndex, build_index, file_sha256
+from .answer_audit import audit_answers
+
+
+def write_report(output: Path, report: dict, input_path: Path) -> None:
+    if output.resolve() == input_path.resolve():
+        raise ValueError("Le rapport doit être distinct du fichier d'entrée")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".json", prefix="actelyo-report-",
+                                     dir=output.parent, delete=False) as temporary:
+        temporary.write(json.dumps(report, ensure_ascii=False, indent=2))
+        temporary.write("\n")
+        staged = Path(temporary.name)
+    try:
+        os.replace(staged, output)
+    finally:
+        staged.unlink(missing_ok=True)
 
 
 def download_model(output: Path) -> dict:
@@ -62,14 +78,22 @@ def evaluate(index: LegalIndex, cases: list[dict], top_k: int = 5) -> dict:
                         "relevant_retrieved_at_3": len(set(retrieved[:3]) & relevant),
                         "relevant_retrieved_at_5": len(set(retrieved[:5]) & relevant),
                         "latency_ms": round(elapsed * 1000, 3)})
-    count = len(results)
-    return {"count": count, "recall_at_1": sum(r["relevant_retrieved_at_1"] / r["relevant_count"] for r in results) / count,
-            "recall_at_3": sum(r["relevant_retrieved_at_3"] / r["relevant_count"] for r in results) / count,
-            "recall_at_5": sum(r["relevant_retrieved_at_5"] / r["relevant_count"] for r in results) / count,
-            "hit_at_1": sum(r["rank"] == 1 for r in results) / count,
-            "hit_at_3": sum(r["rank"] is not None and r["rank"] <= 3 for r in results) / count,
-            "hit_at_5": sum(r["rank"] is not None and r["rank"] <= 5 for r in results) / count,
-            "mrr": sum(1 / r["rank"] for r in results if r["rank"]) / count,
+    def summary(rows):
+        count = len(rows)
+        latencies = sorted(r["latency_ms"] for r in rows)
+        def percentile(value):
+            return latencies[min(count - 1, int((count - 1) * value + 0.5))]
+        return {"count": count,
+                **{f"recall_at_{k}": sum(r[f"relevant_retrieved_at_{k}"] / r["relevant_count"] for r in rows) / count
+                   for k in (1, 3, 5)},
+                **{f"hit_at_{k}": sum(r["rank"] is not None and r["rank"] <= k for r in rows) / count
+                   for k in (1, 3, 5)},
+                "mrr": sum(1 / r["rank"] for r in rows if r["rank"]) / count,
+                "latency_p50_ms": percentile(0.50), "latency_p95_ms": percentile(0.95)}
+    groups = {}
+    for result in results:
+        groups.setdefault(result["language"] or "unspecified", []).append(result)
+    return {**summary(results), "by_language": {name: summary(rows) for name, rows in sorted(groups.items())},
             "cases": [{key: value for key, value in r.items() if key != "retrieved"} for r in results]}
 
 
@@ -78,6 +102,9 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     download = commands.add_parser("download-model")
     download.add_argument("--output", type=Path, required=True)
+    audit = commands.add_parser("audit-answers")
+    audit.add_argument("--input", type=Path, required=True)
+    audit.add_argument("--output", type=Path, required=True)
     build = commands.add_parser("index")
     build.add_argument("--corpus", type=Path, required=True)
     build.add_argument("--output", type=Path, required=True)
@@ -91,6 +118,15 @@ def main() -> None:
         provenance = download_model(args.output)
         print(f"Modèle {provenance['repo_id']} téléchargé ; révision {provenance['revision']}")
         return
+    if args.command == "audit-answers":
+        raw = args.input.read_bytes()
+        if len(raw) > 50 * 1024 * 1024:
+            raise ValueError("Fichier de réponses trop volumineux")
+        report = audit_answers(json.loads(raw)["cases"])
+        report["input_sha256"] = hashlib.sha256(raw).hexdigest()
+        write_report(args.output, report, args.input)
+        print(f"{report['count']} réponses auditées ; citations valides {report['citation_valid_rate']:.3f}")
+        return
     embedder = E5Embedder(os.environ.get("ACTELYO_E5_MODEL", "intfloat/multilingual-e5-base"))
     if args.command == "index":
         result = build_index(args.corpus, args.output, embedder)
@@ -101,8 +137,7 @@ def main() -> None:
         index = LegalIndex(args.index, embedder)
         report = evaluate(index, data["cases"])
         report.update({"benchmark_sha256": hashlib.sha256(raw).hexdigest(), "model": embedder.model_path})
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        write_report(args.output, report, args.benchmark)
         if args.mlflow_local:
             import mlflow
             tracking = args.mlflow_local.resolve()

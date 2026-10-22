@@ -27,13 +27,15 @@ Groq est **facultatif** : `ACTELYO_LEGAL_GENERATOR=groq`, `ACTELYO_ALLOW_CLOUD_C
 
 ## Évaluation et exploitation
 
-Le benchmark JSON contient `{"cases":[{"id":"q1","language":"fr","query":"...","relevant":["id-article"]}]}`. Pour chaque cas, le rapport conserve le rang du premier article attendu et mesure Recall@1/3/5, MRR et latence. Il contient l'empreinte SHA-256 du jeu de questions ; le texte des questions n'est pas recopié dans le rapport.
+Le benchmark JSON contient `{"cases":[{"id":"q1","language":"fr","query":"...","relevant":["id-article"]}]}`. Pour chaque cas, le rapport conserve le rang du premier article attendu et mesure Recall@1/3/5, Hit@1/3/5, MRR et latences p50/p95, globalement et par langue. Il contient l'empreinte SHA-256 du jeu de questions ; le texte des questions n'est pas recopié dans le rapport.
 
 ```powershell
 py -m legal_rag.cli evaluate --index .\legal_rag\data\index --benchmark .\benchmark-prive.json --output .\legal_rag\data\evaluation.json
 ```
 
 `--mlflow-local .\legal_rag\data\mlruns` active une trace d'expérience MLflow **locale** (paramètres, empreintes et métriques, sans question). Installer `requirements-ops.txt` pour MLflow et BentoML. `bentoml serve legal_rag.bento_service:ActelyoLegalRag --host 127.0.0.1` expose la même API sous `/legal` si BentoML est souhaité. `ACTELYO_LANGFUSE_HOST=http://127.0.0.1:3000` active les traces Langfuse sur une instance auto-hébergée, avec ses clés `LANGFUSE_PUBLIC_KEY` et `LANGFUSE_SECRET_KEY` ; aucune question ni passage n'est placé dans les métadonnées de recherche. Ce dépôt ne démarre pas Langfuse lui-même.
+
+Pour contrôler des réponses enregistrées, fournir à `py -m legal_rag.cli audit-answers --input .\reponses-privees.json --output .\legal_rag\data\audit.json` un objet `cases` contenant `id`, `answer`, `sources` (liste d'objets `id`), `relevant` (identifiants attendus), et éventuellement `human_review_correct` (`true` ou `false`). [L'exemple](../examples/rag-eval/answers.sample.json) est fictif. L'audit calcule la validité des numéros de citation, la précision des sources citées, la couverture des sources attendues et la proportion de réponses approuvées par un humain. Le rapport omet le texte des réponses. La validation automatique ne peut pas garantir que l'interprétation juridique est correcte ; la revue humaine reste indispensable.
 
 `GET /metrics` expose des compteurs et la durée cumulée. `docker compose -f legal_rag/compose.yaml --profile monitoring up --build` ajoute Prometheus et Grafana sur l'interface locale. Pour versionner un corpus privé avec DVC, initialiser DVC **dans un dépôt privé dédié**, y faire `dvc add` puis configurer un stockage local ou maîtrisé ; ne pas pousser dans ce dépôt public les pointeurs vers des données confidentielles.
 

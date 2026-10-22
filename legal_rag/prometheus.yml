@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: actelyo-legal-rag
+    static_configs:
+      - targets: ["legal-rag:8765"]

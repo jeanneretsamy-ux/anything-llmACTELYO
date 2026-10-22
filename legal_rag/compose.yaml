@@ -1,0 +1,36 @@
+services:
+  legal-rag:
+    build:
+      context: ..
+      dockerfile: legal_rag/Dockerfile
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      ACTELYO_LEGAL_INDEX: /data/index
+      ACTELYO_E5_MODEL: /models/multilingual-e5-base
+      ACTELYO_LEGAL_GENERATOR: local
+      ACTELYO_LOCAL_LLM_URL: http://host.docker.internal:1234/v1
+      ACTELYO_ALLOW_DOCKER_HOST: "yes"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data/index:/data/index:ro
+      - ./data/models:/models:ro
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: [monitoring]
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    image: grafana/grafana:12.1.0
+    profiles: [monitoring]
+    ports:
+      - "127.0.0.1:3002:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-datasource.yml:/etc/grafana/provisioning/datasources/actelyo.yml:ro
+volumes:
+  grafana_data:

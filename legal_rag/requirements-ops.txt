@@ -1,0 +1,4 @@
+mlflow>=3,<4
+bentoml>=1.4,<2
+langfuse>=4,<5
+dvc>=3,<5

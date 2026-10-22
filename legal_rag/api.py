@@ -12,9 +12,11 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 from .core import E5Embedder, LegalIndex
+from .openrag import OpenRagError, OpenRagRetriever
 
 app = FastAPI(title="Actelyo Legal RAG", version="0.1.0")
 _index: LegalIndex | None = None
+_openrag: OpenRagRetriever | None = None
 _stats = {"queries": 0, "errors": 0, "latency_sum": 0.0}
 
 
@@ -52,10 +54,29 @@ def get_index() -> LegalIndex:
     return _index
 
 
+def get_retriever():
+    global _openrag
+    backend = os.environ.get("ACTELYO_LEGAL_RETRIEVER", "e5-faiss")
+    if backend == "e5-faiss":
+        return get_index()
+    if backend == "openrag":
+        if _openrag is None:
+            try:
+                _openrag = OpenRagRetriever.from_environment()
+            except ValueError as exc:
+                raise HTTPException(503, str(exc)) from exc
+        return _openrag
+    raise HTTPException(400, "Moteur de recherche juridique inconnu")
+
+
 @app.get("/health")
 def health():
-    index = get_index()
-    return {"status": "ok", "articles": index.metadata["articleCount"], "passages": index.index.ntotal,
+    retriever = get_retriever()
+    if isinstance(retriever, OpenRagRetriever):
+        return {"status": "configured", "backend": "openrag", "filter_id": retriever.filter_id,
+                "note": "Disponibilité du service à vérifier avec /search"}
+    index = retriever
+    return {"status": "ok", "backend": "e5-faiss", "articles": index.metadata["articleCount"], "passages": index.index.ntotal,
             "corpus_sha256": index.metadata["corpusSha256"], "model": index.metadata["model"]}
 
 
@@ -64,12 +85,15 @@ def search(request: SearchRequest):
     start = perf_counter()
     try:
         with optional_trace("legal-search", {"limit": request.limit}):
-            results = get_index().search(request.query, request.limit)
+            results = get_retriever().search(request.query, request.limit)
         _stats["queries"] += 1
         return {"results": results}
     except ValueError as exc:
         _stats["errors"] += 1
         raise HTTPException(400, str(exc)) from exc
+    except OpenRagError as exc:
+        _stats["errors"] += 1
+        raise HTTPException(502, str(exc)) from exc
     finally:
         _stats["latency_sum"] += perf_counter() - start
 
@@ -99,7 +123,10 @@ def generator_config() -> tuple[str, str, str | None]:
 def answer(request: AnswerRequest):
     import httpx
     with optional_trace("legal-answer-retrieval", {"limit": request.limit}):
-        hits = get_index().search(request.query, request.limit)
+        try:
+            hits = get_retriever().search(request.query, request.limit)
+        except OpenRagError as exc:
+            raise HTTPException(502, str(exc)) from exc
     if not hits:
         return {"answer": "Aucune source pertinente dans ce corpus.", "sources": []}
     base, model, key = generator_config()
@@ -130,7 +157,8 @@ def answer(request: AnswerRequest):
     cited = set(re.findall(r"\[(\d+)\]", message))
     return {"answer": message, "has_verifiable_citation": bool(cited) and cited.issubset(valid_citations),
             "sources": [{"id": h["id"], "citation": h["citation"],
-                                              "source_page": h["source_page"], "score": h["score"]} for h in hits],
+                         "source_page": h["source_page"], "score": h["score"],
+                         "source_verified": h.get("source_verified", False)} for h in hits],
             "generator": "groq" if key else "local"}
 
 

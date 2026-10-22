@@ -25,6 +25,22 @@ La réponse utilise par défaut une API OpenAI compatible **locale** sur `http:/
 
 Groq est **facultatif** : `ACTELYO_LEGAL_GENERATOR=groq`, `ACTELYO_ALLOW_CLOUD_CONTEXT=yes`, `GROQ_API_KEY` et `ACTELYO_GROQ_MODEL` sont tous requis. Ce choix envoie question et passages juridiques à Groq ; ne l'activer que pour des données autorisées. Aucun contexte n'est envoyé à Groq en mode local.
 
+## OpenRAG facultatif
+
+Le connecteur vise [langflow-ai/openrag](https://github.com/langflow-ai/openrag), une application distincte sous licence Apache-2.0. Il appelle son API `POST /v1/search` en local ; il ne copie pas son code, ne lance pas ses conteneurs et ne l'installe pas dans l'EXE Actelyo. Sur Windows, [son installation officielle passe par WSL](https://docs.openr.ag/quickstart/), avec Docker ou Podman pour ses services. Laisser `ACTELYO_LEGAL_RETRIEVER=e5-faiss` (valeur par défaut) conserve le moteur E5/FAISS habituel.
+
+Pour utiliser une instance OpenRAG déjà installée, créer dans OpenRAG une clé API autorisée à rechercher et un filtre de connaissance réservé au corpus juridique voulu, puis démarrer le service Actelyo avec :
+
+```powershell
+$env:ACTELYO_LEGAL_RETRIEVER = 'openrag'
+$env:ACTELYO_OPENRAG_URL = 'http://127.0.0.1:3000'
+$env:ACTELYO_OPENRAG_API_KEY = '<cle-locale>'
+$env:ACTELYO_OPENRAG_FILTER_ID = '<identifiant-du-filtre>'
+py -m uvicorn legal_rag.api:app --host 127.0.0.1 --port 8765
+```
+
+La clé reste dans l'environnement du service Python et n'est jamais renvoyée au navigateur. L'adresse doit être une URL HTTP de boucle locale. `/health` répond `configured` pour OpenRAG : seule une requête `/search` confirme que l'instance est joignable et que la clé et le filtre sont valides. Les résultats OpenRAG sont affichés avec nom de fichier et page ; `source_verified=false` rappelle qu'Actelyo n'a pas vérifié le statut juridique, la provenance ou le contenu du document. La séparation des documents dépend également des droits associés à la clé et au filtre dans OpenRAG. Aucun document n'est transféré automatiquement depuis l'index Actelyo ; l'import reste une action explicite dans OpenRAG.
+
 ## Évaluation et exploitation
 
 Le benchmark JSON contient `{"cases":[{"id":"q1","language":"fr","query":"...","relevant":["id-article"]}]}`. [L'exemple trilingue](../examples/rag-eval/legal-benchmark.sample.json) cible un seul article ; le [jeu de plusieurs sujets fictifs](../examples/rag-eval/legal-articles.multilingual.sample.json) et son [benchmark](../examples/rag-eval/legal-benchmark.multilingual.sample.json) permettent un test de classement plus utile. Pour chaque cas, le rapport conserve le rang du premier article attendu et mesure Recall@1/3/5, Hit@1/3/5, MRR et latences p50/p95, globalement et par langue. Il contient l'empreinte SHA-256 du jeu de questions ; le texte des questions n'est pas recopié dans le rapport.

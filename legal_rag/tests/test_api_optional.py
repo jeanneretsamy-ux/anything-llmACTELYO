@@ -55,6 +55,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json()["has_verifiable_citation"])
         self.assertEqual(response.json()["sources"][0]["source_page"], 2)
+        self.assertFalse(response.json()["sources"][0]["source_verified"])
 
 
 if __name__ == "__main__":

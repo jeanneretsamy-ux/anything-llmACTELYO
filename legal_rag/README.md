@@ -10,7 +10,7 @@ Depuis la racine du dépôt, préparer un JSON conforme à [l'exemple fictif](..
 npm run rag:prepare-legal -- --input .\mon-corpus-autorise.json --output .\legal_rag\data\corpus
 ```
 
-Sur Linux, installer les dépendances Python de `requirements.txt`. Sur Windows, FAISS recommande sa distribution Conda CPU x86-64 ; installer `faiss-cpu` par Conda/Pixi, puis les autres dépendances Python de ce dossier. Télécharger volontairement le modèle `intfloat/multilingual-e5-base` avec `py -m legal_rag.cli download-model --output .\legal_rag\data\models\multilingual-e5-base`. Cette commande fixe la révision distante et conserve les SHA-256 des fichiers ; elle exige le réseau une fois. Le programme de recherche charge ensuite uniquement les fichiers présents localement (`local_files_only=True`). Il faut de l'espace disque et de la mémoire pour E5 et FAISS. Docker offre l'autre chemin d'installation, avec `legal_rag/compose.yaml`, après dépôt du modèle dans `data/models/` et construction de l'index.
+Installer les dépendances Python de `requirements.txt`. Le paquet `faiss-cpu` 1.15.1 a été vérifié avec Python 3.13 sur ce poste Windows ; la distribution Conda CPU x86-64 reste la voie officiellement documentée par FAISS pour Windows. Télécharger volontairement le modèle `intfloat/multilingual-e5-base` avec `py -m legal_rag.cli download-model --output .\legal_rag\data\models\multilingual-e5-base`. Cette commande fixe la révision distante et conserve les SHA-256 des fichiers ; elle exige le réseau une fois. Le programme de recherche charge ensuite uniquement les fichiers présents localement (`local_files_only=True`). Il faut de l'espace disque et de la mémoire pour E5 et FAISS. Docker offre l'autre chemin d'installation, avec `legal_rag/compose.yaml`, après dépôt du modèle dans `data/models/` et construction de l'index.
 
 ```powershell
 $env:ACTELYO_E5_MODEL = (Resolve-Path .\legal_rag\data\models\multilingual-e5-base).Path
@@ -27,7 +27,7 @@ Groq est **facultatif** : `ACTELYO_LEGAL_GENERATOR=groq`, `ACTELYO_ALLOW_CLOUD_C
 
 ## Évaluation et exploitation
 
-Le benchmark JSON contient `{"cases":[{"id":"q1","language":"fr","query":"...","relevant":["id-article"]}]}`. Pour chaque cas, le rapport conserve le rang du premier article attendu et mesure Recall@1/3/5, Hit@1/3/5, MRR et latences p50/p95, globalement et par langue. Il contient l'empreinte SHA-256 du jeu de questions ; le texte des questions n'est pas recopié dans le rapport.
+Le benchmark JSON contient `{"cases":[{"id":"q1","language":"fr","query":"...","relevant":["id-article"]}]}`. [L'exemple trilingue](../examples/rag-eval/legal-benchmark.sample.json) cible un seul article ; le [jeu de plusieurs sujets fictifs](../examples/rag-eval/legal-articles.multilingual.sample.json) et son [benchmark](../examples/rag-eval/legal-benchmark.multilingual.sample.json) permettent un test de classement plus utile. Pour chaque cas, le rapport conserve le rang du premier article attendu et mesure Recall@1/3/5, Hit@1/3/5, MRR et latences p50/p95, globalement et par langue. Il contient l'empreinte SHA-256 du jeu de questions ; le texte des questions n'est pas recopié dans le rapport.
 
 ```powershell
 py -m legal_rag.cli evaluate --index .\legal_rag\data\index --benchmark .\benchmark-prive.json --output .\legal_rag\data\evaluation.json

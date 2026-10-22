@@ -16,9 +16,11 @@ jobs:
       - run: python -m pip install -r legal_rag/requirements.txt
       - run: python -m unittest discover -s legal_rag/tests -v
       - name: Download multilingual E5 into an isolated CI cache
-        run: python -m legal_rag.cli download-model --output legal_rag/data/models/multilingual-e5-base
+        run: python -m legal_rag.cli download-model --output legal_rag/data/models/multilingual-e5-base --revision d128750597153bb5987e10b1c3493a34e5a4502a
       - name: Build an actual FAISS index from fictional articles
         run: |
-          node server/scripts/prepare-legal-corpus.cjs --input examples/rag-eval/legal-articles.sample.json --output legal_rag/data/corpus
+          node server/scripts/prepare-legal-corpus.cjs --input examples/rag-eval/legal-articles.multilingual.sample.json --output legal_rag/data/corpus
           ACTELYO_E5_MODEL=legal_rag/data/models/multilingual-e5-base python -m legal_rag.cli index --corpus legal_rag/data/corpus --output legal_rag/data/index
-          ACTELYO_E5_MODEL=legal_rag/data/models/multilingual-e5-base ACTELYO_LEGAL_INDEX=legal_rag/data/index python -c "from legal_rag.api import health, search, SearchRequest; assert health()['articles'] == 1; assert search(SearchRequest(query='article fictif'))['results'][0]['id'] == 'demo-1'"
+          ACTELYO_E5_MODEL=legal_rag/data/models/multilingual-e5-base ACTELYO_LEGAL_INDEX=legal_rag/data/index python -c "from legal_rag.api import health; assert health()['articles'] == 3"
+          ACTELYO_E5_MODEL=legal_rag/data/models/multilingual-e5-base python -m legal_rag.cli evaluate --index legal_rag/data/index --benchmark examples/rag-eval/legal-benchmark.multilingual.sample.json --output legal_rag/data/evaluation.json
+          python -c "import json; r=json.load(open('legal_rag/data/evaluation.json', encoding='utf-8')); assert r['recall_at_1'] == 1.0; assert len(r['by_language']) == 3"

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "articles": [
+    {
+      "id": "societe-1", "citation": "Code fictif des sociétés, article 1", "jurisdiction": "Exemple fictif", "is_repealed": false,
+      "source_name": "Corpus de démonstration", "source_page": 1,
+      "text_fr": "La constitution d'une société fictive nécessite des statuts, l'identification des associés et la répartition du capital social.",
+      "text_en": "Forming a fictional company requires articles of association, identification of shareholders, and allocation of share capital.",
+      "text_ar": "يتطلب تأسيس شركة خيالية نظاماً أساسياً وتحديد الشركاء وتوزيع رأس المال."
+    },
+    {
+      "id": "bail-2", "citation": "Code fictif des baux, article 2", "jurisdiction": "Exemple fictif", "is_repealed": false,
+      "source_name": "Corpus de démonstration", "source_page": 2,
+      "text_fr": "Le bail commercial fictif prévoit une durée, un loyer et des conditions de renouvellement du local loué.",
+      "text_en": "The fictional commercial lease sets a term, rent, and renewal conditions for the rented premises.",
+      "text_ar": "يحدد عقد الإيجار التجاري الخيالي المدة والأجرة وشروط تجديد المحل المؤجر."
+    },
+    {
+      "id": "donnees-3", "citation": "Code fictif des données, article 3", "jurisdiction": "Exemple fictif", "is_repealed": false,
+      "source_name": "Corpus de démonstration", "source_page": 3,
+      "text_fr": "Les données personnelles fictives doivent être traitées de manière confidentielle et conservées pendant une durée limitée.",
+      "text_en": "Fictional personal data must be processed confidentially and retained for a limited period.",
+      "text_ar": "يجب معالجة البيانات الشخصية الخيالية بسرية والاحتفاظ بها لمدة محدودة."
+    },
+    {
+      "id": "abroge-4", "citation": "Code fictif ancien, article 4", "jurisdiction": "Exemple fictif", "is_repealed": true,
+      "source_name": "Corpus de démonstration", "source_page": 4,
+      "text_fr": "Ancienne règle fictive abrogée sur les contrats."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "cases": [
+    {"id": "fr-demo", "language": "fr", "query": "À quoi sert le texte fictif de démonstration ?", "relevant": ["demo-1"]},
+    {"id": "en-demo", "language": "en", "query": "What is the fictional demonstration text used for?", "relevant": ["demo-1"]},
+    {"id": "ar-demo", "language": "ar", "query": "ما الغرض من النص الخيالي التجريبي؟", "relevant": ["demo-1"]}
+  ]
+}

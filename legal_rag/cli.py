@@ -29,15 +29,15 @@ def write_report(output: Path, report: dict, input_path: Path) -> None:
         staged.unlink(missing_ok=True)
 
 
-def download_model(output: Path) -> dict:
+def download_model(output: Path, revision: str | None = None) -> dict:
     """Explicit user-initiated fetch; the inference path never uses network."""
     from huggingface_hub import HfApi, snapshot_download
     output = output.resolve()
     if output.exists():
         raise ValueError("Choisissez un nouveau dossier de modèle inexistant")
     output.parent.mkdir(parents=True, exist_ok=True)
-    revision = HfApi().model_info(MODEL).sha
-    if not isinstance(revision, str) or len(revision) != 40:
+    revision = revision or HfApi().model_info(MODEL).sha
+    if not isinstance(revision, str) or len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
         raise ValueError("Révision du modèle E5 invalide")
     stage = Path(tempfile.mkdtemp(prefix="actelyo-e5-", dir=output.parent))
     try:
@@ -102,6 +102,7 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     download = commands.add_parser("download-model")
     download.add_argument("--output", type=Path, required=True)
+    download.add_argument("--revision", help="SHA Git Hugging Face fixe du modèle")
     audit = commands.add_parser("audit-answers")
     audit.add_argument("--input", type=Path, required=True)
     audit.add_argument("--output", type=Path, required=True)
@@ -115,7 +116,7 @@ def main() -> None:
     benchmark.add_argument("--mlflow-local", type=Path, help="Journaliser uniquement dans un dossier MLflow local")
     args = parser.parse_args()
     if args.command == "download-model":
-        provenance = download_model(args.output)
+        provenance = download_model(args.output, args.revision)
         print(f"Modèle {provenance['repo_id']} téléchargé ; révision {provenance['revision']}")
         return
     if args.command == "audit-answers":

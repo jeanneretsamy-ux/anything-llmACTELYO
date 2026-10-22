@@ -13,6 +13,12 @@ from time import perf_counter
 from .core import MODEL, E5Embedder, LegalIndex, build_index, file_sha256
 from .answer_audit import audit_answers
 
+E5_REQUIRED_FILES = [
+    "config.json", "model.safetensors", "modules.json", "sentence_bert_config.json",
+    "sentencepiece.bpe.model", "special_tokens_map.json", "tokenizer_config.json",
+    "tokenizer.json", "1_Pooling/config.json",
+]
+
 
 def write_report(output: Path, report: dict, input_path: Path) -> None:
     if output.resolve() == input_path.resolve():
@@ -41,7 +47,10 @@ def download_model(output: Path, revision: str | None = None) -> dict:
         raise ValueError("Révision du modèle E5 invalide")
     stage = Path(tempfile.mkdtemp(prefix="actelyo-e5-", dir=output.parent))
     try:
-        snapshot_download(MODEL, revision=revision, local_dir=stage)
+        snapshot_download(MODEL, revision=revision, local_dir=stage, allow_patterns=E5_REQUIRED_FILES)
+        for relative in E5_REQUIRED_FILES:
+            if not (stage / relative).is_file():
+                raise ValueError(f"Fichier E5 requis absent : {relative}")
         files = {}
         for file in stage.rglob("*"):
             if file.is_file() and ".cache" not in file.parts:

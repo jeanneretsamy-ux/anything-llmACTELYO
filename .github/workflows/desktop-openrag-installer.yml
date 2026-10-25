@@ -1,0 +1,81 @@
+name: Actelyo RAG Desktop installer
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - desktop/**
+      - .github/workflows/desktop-openrag-installer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-installer:
+    runs-on: windows-2025
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Download verified 1.0.2 runtime package
+        shell: pwsh
+        run: |
+          $url = 'https://github.com/jeanneretsamy-ux/actelyo-downloads/releases/download/desktop-rag-v1.0.2/Actelyo-RAG-Desktop-Setup-1.0.2-x64.exe'
+          $installer = Join-Path $env:RUNNER_TEMP 'Actelyo-RAG-Desktop-Setup-1.0.2-x64.exe'
+          & curl.exe -fL --retry 3 -o $installer $url
+          if ($LASTEXITCODE -ne 0) { throw 'Download failed' }
+          $expected = '8BB5A6D2435899EC68593E1B358456BD81A713D8B28F2363F10385DAD8FAC128'
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
+          if ($actual -ne $expected) { throw "Unexpected runtime package hash: $actual" }
+
+      - name: Extract runtime through Inno Setup
+        shell: pwsh
+        run: |
+          $installer = Join-Path $env:RUNNER_TEMP 'Actelyo-RAG-Desktop-Setup-1.0.2-x64.exe'
+          $target = 'C:\ragbase'
+          $process = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/NOICONS', "/DIR=$target", "/LOG=$env:RUNNER_TEMP\ragbase-install.log") -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) {
+            Get-Content -LiteralPath "$env:RUNNER_TEMP\ragbase-install.log" -Tail 40
+            throw "Runtime extraction failed: $($process.ExitCode)"
+          }
+          foreach ($file in @('resources\runtime\node.exe', 'resources\runtime\server\index.js', 'resources\runtime\collector\index.js')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $target $file))) { throw "Missing runtime file: $file" }
+          }
+
+      - name: Package Desktop 1.0.3
+        shell: pwsh
+        run: |
+          npm ci --prefix desktop
+          if ($LASTEXITCODE -ne 0) { throw 'npm ci failed' }
+          $env:ACTELYO_RAG_RUNTIME = 'C:\ragbase\resources\runtime'
+          $env:ACTELYO_RAG_BUILD_DIR = 'C:\ragout'
+          node desktop/build.cjs
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop packaging failed' }
+          $asar = 'C:\ragout\resources\app.asar'
+          if (-not (Test-Path -LiteralPath $asar)) { throw 'Missing app.asar' }
+          node -e "const a=require('./desktop/node_modules/@electron/asar'); const p='C:/ragout/resources/app.asar'; if(!a.listPackage(p).some(x=>x.endsWith('openrag-setup.cjs'))) process.exit(1)"
+          if ($LASTEXITCODE -ne 0) { throw 'OpenRAG setup module missing from app.asar' }
+
+      - name: Compile Windows installer
+        shell: pwsh
+        run: |
+          $compiler = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
+          if (-not $compiler) { $compiler = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' }
+          if (-not (Test-Path -LiteralPath $compiler)) { throw 'Inno Setup is unavailable' }
+          & $compiler '/DSourceDir=C:\ragout' 'desktop\installer.iss'
+          if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
+          $package = 'desktop\dist\Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe'
+          if (-not (Test-Path -LiteralPath $package)) { throw 'Installer missing' }
+          Get-Item -LiteralPath $package | Select-Object Name, Length
+          Get-FileHash -LiteralPath $package -Algorithm SHA256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Actelyo-RAG-Desktop-Setup-1.0.3-x64
+          path: desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe
+          if-no-files-found: error
+          compression-level: 0

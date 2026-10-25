@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require('electron')
 const path = require('node:path');
 const fs = require('node:fs');
 const { createRuntime } = require('./runtime.cjs');
+const openRagSetup = require('./openrag-setup.cjs');
 
 app.setName('Actelyo RAG');
 app.setAppUserModelId('fr.actelyo.rag');
@@ -52,6 +53,47 @@ async function prepareLegalCorpus() {
   }
 }
 
+async function showOpenRagSetup() {
+  let status;
+  try {
+    status = await openRagSetup.diagnose(app.getPath('userData'));
+  } catch (error) {
+    await dialog.showMessageBox(window, { type: 'error', title: 'Diagnostic OpenRAG',
+      message: 'Le poste n’a pas pu être vérifié.', detail: String(error.message) });
+    return;
+  }
+  const buttons = [];
+  if (!status.wsl2) buttons.push('Installer WSL 2 et Ubuntu');
+  if (!status.dockerReady) buttons.push('Installer ou activer Docker Desktop…');
+  buttons.push('Guide OpenRAG', 'Fermer');
+  const result = await dialog.showMessageBox(window, {
+    type: status.ready ? 'info' : 'warning', title: 'OpenRAG — état du poste',
+    message: status.ready ? 'Le poste peut accueillir OpenRAG.' : 'Prérequis OpenRAG à préparer',
+    detail: openRagSetup.formatDiagnosis(status), buttons,
+    defaultId: buttons.length - 1, cancelId: buttons.length - 1, noLink: true,
+  });
+  const action = buttons[result.response];
+  if (action === 'Installer WSL 2 et Ubuntu') {
+    const confirmation = await dialog.showMessageBox(window, {
+      type: 'question', title: 'Installer WSL 2 et Ubuntu',
+      message: 'Ouvrir l’installation Windows de WSL 2 et Ubuntu ?',
+      detail: 'Windows peut demander les droits administrateur et un redémarrage. OpenRAG et Docker ne seront pas installés à cette étape.',
+      buttons: ['Installer', 'Annuler'], defaultId: 1, cancelId: 1,
+    });
+    if (confirmation.response === 0) {
+      try { await openRagSetup.launchWslInstaller(); }
+      catch (error) {
+        await dialog.showMessageBox(window, { type: 'error', title: 'Installation WSL',
+          message: 'L’installation WSL n’a pas pu être ouverte.', detail: String(error.message) });
+      }
+    }
+  } else if (action === 'Installer ou activer Docker Desktop…') {
+    await shell.openExternal(openRagSetup.DOCKER_DOWNLOAD);
+  } else if (action === 'Guide OpenRAG') {
+    await shell.openExternal(openRagSetup.WINDOWS_GUIDE);
+  }
+}
+
 if (!locked) app.quit();
 else {
   app.on('second-instance', () => {
@@ -62,6 +104,7 @@ else {
       { label: 'Actelyo RAG', submenu: [
         { label: 'Dossier de données locales', click: () => shell.openPath(app.getPath('userData')) },
         { label: 'Préparer un corpus juridique…', click: () => prepareLegalCorpus() },
+        { label: 'OpenRAG — vérifier et préparer ce poste…', click: () => showOpenRagSetup() },
         { type: 'separator' }, { role: 'quit', label: 'Quitter' },
       ] },
       { label: 'Édition', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },

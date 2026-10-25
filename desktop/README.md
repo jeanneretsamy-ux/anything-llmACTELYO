@@ -18,6 +18,12 @@ Le serveur et le collector n'écoutent que sur 127.0.0.1. Les clés et documents
 
 ## OpenRAG facultatif
 
-Le connecteur disponible dans [legal_rag](../legal_rag/README.md#openrag-facultatif) cible précisément [langflow-ai/openrag](https://github.com/langflow-ai/openrag) et son API locale `POST /v1/search`. Il permet au service juridique Actelyo de rechercher dans une instance OpenRAG déjà installée, avec une clé API et un filtre de connaissance. Le Desktop 1.0.2 ne démarre pas ce service Python et ne contient pas OpenRAG, WSL, Docker ou Podman ; le connecteur ne constitue donc pas encore une option activable dans l'EXE. L'installation Windows d'OpenRAG et le lancement du service juridique sont des étapes distinctes à valider avant de publier un nouvel installateur.
+Le connecteur disponible dans [legal_rag](../legal_rag/README.md#openrag-facultatif) cible précisément [langflow-ai/openrag](https://github.com/langflow-ai/openrag) et son API locale `POST /v1/search`. Il permet au service juridique Actelyo de rechercher dans une instance OpenRAG déjà installée, avec une clé API et un filtre de connaissance.
+
+La source 1.0.3 ajoute au menu **Actelyo RAG → OpenRAG — vérifier et préparer ce poste…** un diagnostic de l'espace libre sur le disque du profil Actelyo, de la mémoire, d'Ubuntu WSL 2, du moteur Docker dans Ubuntu et de Docker Compose. Les seuils affichés (50 Go et 8 Go de RAM) viennent de la [documentation OpenRAG](https://docs.openr.ag/install-uv/). L'utilisateur peut lancer explicitement l'installation Windows de WSL 2 et Ubuntu, ou ouvrir la page officielle d'installation de Docker Desktop. Ces actions peuvent nécessiter les droits administrateur et un redémarrage. Le diagnostic ne télécharge aucun modèle et ne démarre aucun conteneur. Il faut aussi vérifier l'espace sur le disque où Docker stocke ses images si ce disque diffère de celui du profil Actelyo.
+
+L'installateur 1.0.3 doit encore être assemblé et testé ; le fichier 1.0.2 existant ne contient pas ce menu.
+
+Le Desktop ne contient toujours pas OpenRAG, WSL, Docker ou le service Python `legal_rag` ; le connecteur ne constitue donc pas encore une option activable dans l'EXE. L'installation et le démarrage d'OpenRAG, puis la configuration de sa clé API et de son filtre, restent distincts. Sur un PC sans les ressources nécessaires, le moteur RAG habituel du Desktop fonctionne sans ces prérequis.
 
 [Catalogue public des installateurs et modèles](https://jeanneretsamy-ux.github.io/actelyo-downloads/)

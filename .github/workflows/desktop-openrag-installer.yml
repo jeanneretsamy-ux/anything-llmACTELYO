@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   windows-installer:
@@ -60,6 +60,16 @@ jobs:
           node -e "const a=require('./desktop/node_modules/@electron/asar'); const p='C:/ragout/resources/app.asar'; if(!a.listPackage(p).some(x=>x.endsWith('openrag-setup.cjs'))) process.exit(1)"
           if ($LASTEXITCODE -ne 0) { throw 'OpenRAG setup module missing from app.asar' }
 
+      - name: Stamp Actelyo RAG logo and version on the executable
+        shell: pwsh
+        run: |
+          $rcedit = Join-Path $env:RUNNER_TEMP 'rcedit-x64.exe'
+          & curl.exe -fsSL --retry 3 -o $rcedit 'https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe'
+          if ((Get-FileHash -LiteralPath $rcedit -Algorithm SHA256).Hash -ne '3E7801DB1A5EDBEC91B49A24A094AAD776CB4515488EA5A4CA2289C400EADE2A') { throw 'Unexpected rcedit hash' }
+          $exe = 'C:\ragout\Actelyo RAG.exe'
+          & $rcedit $exe --set-icon desktop\branding\actelyo.ico --set-product-version 1.0.3 --set-file-version 1.0.3 --set-version-string ProductName 'Actelyo RAG Desktop' --set-version-string FileDescription 'Actelyo RAG Desktop' --set-version-string CompanyName 'Actelyo'
+          if ($LASTEXITCODE -ne 0) { throw 'rcedit failed' }
+
       - name: Compile Windows installer
         shell: pwsh
         run: |
@@ -79,3 +89,14 @@ jobs:
           path: desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe
           if-no-files-found: error
           compression-level: 0
+
+      - name: Publish installer as a GitHub release
+        if: github.ref == 'refs/heads/master'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = 'actelyo-rag-desktop-v1.0.3'
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -ne 0) { gh release create $tag --target ${{ github.sha }} --title 'Actelyo RAG Desktop 1.0.3' --notes 'Logo Actelyo RAG (cyan) sur l executable, l installateur et les raccourcis.' }
+          gh release upload $tag desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe --clobber

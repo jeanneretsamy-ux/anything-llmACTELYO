@@ -19,6 +19,7 @@ SolidCompression=yes
 LZMAUseSeparateProcess=yes
 LZMANumBlockThreads=4
 WizardStyle=modern
+SetupIconFile=branding\actelyo.ico
 UninstallDisplayIcon={app}\Actelyo RAG.exe
 CloseApplications=yes
 [Languages]
@@ -26,7 +27,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "Uninstall*,unins*,*.map,*.d.ts,*\test\*,*\tests\*,*\__tests__\*"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
-Name: "{autoprograms}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"
-Name: "{autodesktop}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"
+Name: "{autoprograms}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"; IconFilename: "{app}\Actelyo RAG.exe"
+Name: "{autodesktop}\Actelyo RAG Desktop"; Filename: "{app}\Actelyo RAG.exe"; IconFilename: "{app}\Actelyo RAG.exe"
 [Run]
 Filename: "{app}\Actelyo RAG.exe"; Description: "Ouvrir Actelyo RAG"; Flags: nowait postinstall skipifsilent

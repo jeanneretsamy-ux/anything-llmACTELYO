@@ -8,6 +8,8 @@ permissions:
   contents: write
 jobs:
   deploy:
+    # Upstream-only job: this fork has no SPONSOR_PAT secret and no sponsors.
+    if: github.repository == 'Mintplex-Labs/anything-llm'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️

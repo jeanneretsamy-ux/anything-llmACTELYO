@@ -6,6 +6,9 @@ on:
     paths:
       - desktop/**
       - .github/workflows/desktop-openrag-installer.yml
+      - server/scripts/rag-eval.cjs
+      - server/utils/ragEvaluation.cjs
+      - server/__tests__/ragEvaluation.node.test.cjs
   workflow_dispatch:
 
 permissions:
@@ -20,6 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Test legal import and retrieval evaluation
+        run: node --test server/__tests__/ragEvaluation.node.test.cjs
 
       - name: Download verified 1.0.2 runtime package
         shell: pwsh
@@ -46,7 +52,7 @@ jobs:
             if (-not (Test-Path -LiteralPath (Join-Path $target $file))) { throw "Missing runtime file: $file" }
           }
 
-      - name: Package Desktop 1.0.3
+      - name: Package Desktop 1.0.4
         shell: pwsh
         run: |
           npm ci --prefix desktop
@@ -67,7 +73,7 @@ jobs:
           & curl.exe -fsSL --retry 3 -o $rcedit 'https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe'
           if ((Get-FileHash -LiteralPath $rcedit -Algorithm SHA256).Hash -ne '3E7801DB1A5EDBEC91B49A24A094AAD776CB4515488EA5A4CA2289C400EADE2A') { throw 'Unexpected rcedit hash' }
           $exe = 'C:\ragout\Actelyo RAG.exe'
-          & $rcedit $exe --set-icon desktop\branding\actelyo.ico --set-product-version 1.0.3 --set-file-version 1.0.3 --set-version-string ProductName 'Actelyo RAG Desktop' --set-version-string FileDescription 'Actelyo RAG Desktop' --set-version-string CompanyName 'Actelyo'
+          & $rcedit $exe --set-icon desktop\branding\actelyo.ico --set-product-version 1.0.4 --set-file-version 1.0.4 --set-version-string ProductName 'Actelyo RAG Desktop' --set-version-string FileDescription 'Actelyo RAG Desktop' --set-version-string CompanyName 'Actelyo'
           if ($LASTEXITCODE -ne 0) { throw 'rcedit failed' }
 
       - name: Compile Windows installer
@@ -78,15 +84,15 @@ jobs:
           if (-not (Test-Path -LiteralPath $compiler)) { throw 'Inno Setup is unavailable' }
           & $compiler '/DSourceDir=C:\ragout' 'desktop\installer.iss'
           if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
-          $package = 'desktop\dist\Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe'
+          $package = 'desktop\dist\Actelyo-RAG-Desktop-Setup-1.0.4-x64.exe'
           if (-not (Test-Path -LiteralPath $package)) { throw 'Installer missing' }
           Get-Item -LiteralPath $package | Select-Object Name, Length
           Get-FileHash -LiteralPath $package -Algorithm SHA256
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Actelyo-RAG-Desktop-Setup-1.0.3-x64
-          path: desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe
+          name: Actelyo-RAG-Desktop-Setup-1.0.4-x64
+          path: desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.4-x64.exe
           if-no-files-found: error
           compression-level: 0
 
@@ -96,7 +102,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = 'actelyo-rag-desktop-v1.0.3'
+          $tag = 'actelyo-rag-desktop-v1.0.4'
           gh release view $tag 2>$null
-          if ($LASTEXITCODE -ne 0) { gh release create $tag --target ${{ github.sha }} --title 'Actelyo RAG Desktop 1.0.3' --notes 'Logo Actelyo RAG (cyan) sur l executable, l installateur et les raccourcis.' }
-          gh release upload $tag desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.3-x64.exe --clobber
+          if ($LASTEXITCODE -ne 0) { gh release create $tag --target ${{ github.sha }} --title 'Actelyo RAG Desktop 1.0.4' --notes 'Logo Actelyo RAG (cyan) sur l executable, l installateur et les raccourcis.' }
+          gh release upload $tag desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.4-x64.exe --clobber

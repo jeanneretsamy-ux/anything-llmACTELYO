@@ -57,7 +57,7 @@ async function evaluate(config, apiKey, request = fetch) {
   const raw = fs.readFileSync(config.benchmark);
   const benchmark = validateBenchmark(JSON.parse(raw.toString("utf8")));
   const rows = [];
-  const endpoint = `${config.baseUrl}/v1/workspace/${encodeURIComponent(config.workspace)}/vector-search`;
+  const endpoint = `${config.baseUrl}/api/v1/workspace/${encodeURIComponent(config.workspace)}/vector-search`;
   for (const item of benchmark.cases) {
     const started = performance.now();
     const response = await request(endpoint, {

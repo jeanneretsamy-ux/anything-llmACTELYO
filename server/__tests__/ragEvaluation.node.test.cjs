@@ -54,11 +54,11 @@ test("evaluation calls the real vector-search contract and keeps queries out of 
     return { ok: true, json: async () => ({ results: [{ id: "chunk-1", metadata: { docSource } }] }) };
   };
   const report = await evaluate(config, "test-key", mockedRequest);
+  assert.equal(calls[0].url, "http://127.0.0.1:3001/api/v1/workspace/droit/vector-search");
   assert.equal(report.overall["recall@1"], 1);
   assert.equal(report.byLanguage.fr.mrr, 1);
   assert.equal(report.byLanguage.ar.mrr, 1);
   assert.equal(report.cases[0].query, undefined);
-  assert.equal(calls[0].url, "http://127.0.0.1:3001/v1/workspace/droit/vector-search");
   assert.equal(calls[0].init.headers.Authorization, "Bearer test-key");
   assert.equal(calls[0].init.redirect, "error");
   assert.match(prometheus(report), /actelyo_rag_eval_recall_at_1\{language="fr"\} 1/);

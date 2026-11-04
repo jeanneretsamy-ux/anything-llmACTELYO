@@ -1,6 +1,6 @@
 param([string]$Executable,[Parameter(Mandatory=$true)][string]$ExpectedIcon,[string]$ProofDirectory,[switch]$SelfTest,[string]$DifferentIcon,[string]$Product='Actelyo RAG')
 $ErrorActionPreference='Stop'
-Add-Type -ReferencedAssemblies System.Drawing -TypeDefinition @'
+Add-Type -ReferencedAssemblies System.Drawing,System.Windows.Forms -TypeDefinition @'
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -21,6 +21,7 @@ public static class ActelyoRuntimeIcon {
  public static IntPtr WindowIcon(IntPtr hwnd){IntPtr icon=SendMessage(hwnd,0x7f,(IntPtr)1,IntPtr.Zero);if(icon==IntPtr.Zero)icon=SendMessage(hwnd,0x7f,(IntPtr)2,IntPtr.Zero);if(icon==IntPtr.Zero)icon=GetClassLongPtr(hwnd,-14);return icon;}
  public static IntPtr FindWindowIcon(int processId,string product){IntPtr found=IntPtr.Zero;EnumWindows(delegate(IntPtr hwnd,IntPtr state){uint pid;GetWindowThreadProcessId(hwnd,out pid);if(pid!=(uint)processId)return true;StringBuilder title=new StringBuilder(512);GetWindowText(hwnd,title,512);if(title.ToString().IndexOf(product,StringComparison.OrdinalIgnoreCase)<0)return true;IntPtr icon=WindowIcon(hwnd);if(icon==IntPtr.Zero)return true;LastWindow=hwnd;found=icon;return false;},IntPtr.Zero);return found;}
  public static void CloseSyntheticWindow(){if(LastWindow!=IntPtr.Zero)PostMessage(LastWindow,0x10,IntPtr.Zero,IntPtr.Zero);}
+ public static void HiddenWindowTest(string file){IntPtr expected=Extract(file,32);try{using(System.Windows.Forms.Form form=new System.Windows.Forms.Form())using(Icon icon=(Icon)Icon.FromHandle(expected).Clone()){form.Text="Actelyo synthetic icon QA";form.Icon=icon;IntPtr hwnd=form.Handle;IntPtr actual=FindWindowIcon(System.Diagnostics.Process.GetCurrentProcess().Id,form.Text);if(actual==IntPtr.Zero||Compare(actual,file,null)!=0)throw new Exception("Hidden native window icon not matched");}}finally{Release(expected);}}
  public static int Compare(IntPtr actual,string file,string output){
   using(Icon live=(Icon)Icon.FromHandle(actual).Clone())using(Bitmap a=live.ToBitmap()){
    IntPtr expected=Extract(file,a.Width);
@@ -40,7 +41,8 @@ if($SelfTest){
   if([ActelyoRuntimeIcon]::Compare($icon,(Resolve-Path -LiteralPath $ExpectedIcon).Path,$null) -ne 0){throw 'Reference does not match itself'}
   if($DifferentIcon -and [ActelyoRuntimeIcon]::Compare($icon,(Resolve-Path -LiteralPath $DifferentIcon).Path,$null) -eq 0){throw 'Different logo incorrectly accepted'}
  }finally{[ActelyoRuntimeIcon]::Release($icon)}
- 'PASS native icon comparison and different-logo rejection';exit 0
+ [ActelyoRuntimeIcon]::HiddenWindowTest((Resolve-Path -LiteralPath $ExpectedIcon).Path)
+ 'PASS native icon comparison, hidden-window discovery and different-logo rejection';exit 0
 }
 if($env:GITHUB_ACTIONS -ne 'true'){throw 'Window test is restricted to the synthetic GitHub runner profile.'}
 if(!$ProofDirectory -or !$env:RUNNER_TEMP){throw 'Runner proof directory required'}

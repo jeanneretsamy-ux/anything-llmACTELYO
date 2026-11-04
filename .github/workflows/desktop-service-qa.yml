@@ -15,3 +15,6 @@ jobs:
         with:
           node-version: '24'
       - run: node --test desktop/tests/service-discovery.test.cjs desktop/tests/upload-storage.test.cjs
+      - name: Native icon comparator and hidden-window regression
+        shell: powershell
+        run: desktop/tests/window-branding.ps1 -SelfTest -ExpectedIcon desktop/branding/actelyo.ico -DifferentIcon C:/Windows/System32/shell32.dll

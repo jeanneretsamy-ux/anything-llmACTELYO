@@ -1,0 +1,17 @@
+name: Desktop service discovery QA
+on:
+  push:
+    branches: [codex/desktop-service-discovery]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  service:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: node --test desktop/tests/service-discovery.test.cjs desktop/tests/upload-storage.test.cjs

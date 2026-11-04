@@ -14,6 +14,7 @@ function freePort() {
   });
 }
 
+const {announce,withdraw}=require('./service-discovery.cjs');
 function createRuntime(runtimeDir, dataDir, status, options = {}) {
   const children = new Set();
   let stopped = false;
@@ -102,7 +103,7 @@ function createRuntime(runtimeDir, dataDir, status, options = {}) {
         const options = { signal: AbortSignal.timeout(1500) };
         const ping = await fetch(`${origin}/api/ping`, options);
         const accepts = await fetch(`http://127.0.0.1:${collectorPort}/accepts`, { signal: AbortSignal.timeout(1500) });
-        if (ping.ok && accepts.ok) return { origin, apiPort, collectorPort };
+        if (ping.ok && accepts.ok) {announce(dataDir,origin);return { origin, apiPort, collectorPort };}
       } catch {}
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
@@ -112,6 +113,7 @@ function createRuntime(runtimeDir, dataDir, status, options = {}) {
   function stop() {
     if (stopped) return;
     stopped = true;
+    try{withdraw(dataDir);}catch{status('L’annonce du service local n’a pas pu être retirée.');}
     for (const child of children) {
       if (!child.pid) continue;
       if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, timeout: 5000, stdio: 'ignore' });

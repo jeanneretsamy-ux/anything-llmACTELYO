@@ -28,7 +28,7 @@ jobs:
         run: node --test server/__tests__/ragEvaluation.node.test.cjs
 
       - name: Test GUI and API collector workspace consistency
-        run: node --test desktop/tests/upload-storage.test.cjs
+        run: node --test desktop/tests/upload-storage.test.cjs desktop/tests/service-discovery.test.cjs
 
       - name: Download verified 1.0.2 runtime package
         shell: pwsh
@@ -55,7 +55,7 @@ jobs:
             if (-not (Test-Path -LiteralPath (Join-Path $target $file))) { throw "Missing runtime file: $file" }
           }
 
-      - name: Package Desktop 1.0.5
+      - name: Package Desktop 1.0.6
         shell: pwsh
         run: |
           npm ci --prefix desktop
@@ -76,7 +76,7 @@ jobs:
           & curl.exe -fsSL --retry 3 -o $rcedit 'https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe'
           if ((Get-FileHash -LiteralPath $rcedit -Algorithm SHA256).Hash -ne '3E7801DB1A5EDBEC91B49A24A094AAD776CB4515488EA5A4CA2289C400EADE2A') { throw 'Unexpected rcedit hash' }
           $exe = 'C:\ragout\Actelyo RAG.exe'
-          & $rcedit $exe --set-icon desktop\branding\actelyo.ico --set-product-version 1.0.5 --set-file-version 1.0.5 --set-version-string ProductName 'Actelyo RAG Desktop' --set-version-string FileDescription 'Actelyo RAG Desktop' --set-version-string CompanyName 'Actelyo'
+          & $rcedit $exe --set-icon desktop\branding\actelyo.ico --set-product-version 1.0.6 --set-file-version 1.0.6 --set-version-string ProductName 'Actelyo RAG Desktop' --set-version-string FileDescription 'Actelyo RAG Desktop' --set-version-string CompanyName 'Actelyo'
           if ($LASTEXITCODE -ne 0) { throw 'rcedit failed' }
 
       - name: Compile Windows installer
@@ -87,7 +87,7 @@ jobs:
           if (-not (Test-Path -LiteralPath $compiler)) { throw 'Inno Setup is unavailable' }
           & $compiler '/DSourceDir=C:\ragout' 'desktop\installer.iss'
           if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed' }
-          $package = 'desktop\dist\Actelyo-RAG-Desktop-Setup-1.0.5-x64.exe'
+          $package = 'desktop\dist\Actelyo-RAG-Desktop-Setup-1.0.6-x64.exe'
           if (-not (Test-Path -LiteralPath $package)) { throw 'Installer missing' }
           Get-Item -LiteralPath $package | Select-Object Name, Length
           Get-FileHash -LiteralPath $package -Algorithm SHA256
@@ -95,18 +95,34 @@ jobs:
       - name: Install and test actual API document collection
         shell: pwsh
         run: |
-          $setup = Resolve-Path 'desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.5-x64.exe'
+          $setup = Resolve-Path 'desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.6-x64.exe'
           $process = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/NOICONS','/DIR=C:\ragqa') -WindowStyle Hidden -Wait -PassThru
           if ($process.ExitCode -ne 0) { throw "Installation failed: $($process.ExitCode)" }
           node desktop/tests/installed-api-upload.cjs C:/ragqa "$env:GITHUB_WORKSPACE/api-proof"
           if ($LASTEXITCODE -ne 0) { throw 'Installed API upload verification failed' }
 
+      - name: Check the actual installed window icon
+        shell: powershell
+        run: desktop/tests/window-branding.ps1 -Executable 'C:\ragqa\Actelyo RAG.exe' -ExpectedIcon 'desktop/branding/actelyo.ico' -ProofDirectory "$env:RUNNER_TEMP\rag-window-proof"
+
+      - name: Retain window branding diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rag-window-diagnostics
+          path: |
+            ${{ runner.temp }}/rag-window-proof/window-icon.png
+            ${{ runner.temp }}/rag-window-proof/window-branding.json
+          if-no-files-found: ignore
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: Actelyo-RAG-Desktop-Setup-1.0.5-x64
+          name: Actelyo-RAG-Desktop-Setup-1.0.6-x64
           path: |
-            desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.5-x64.exe
+            desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.6-x64.exe
             api-proof/api-upload-proof.json
+            ${{ runner.temp }}/rag-window-proof/window-branding.json
+            ${{ runner.temp }}/rag-window-proof/window-icon.png
           if-no-files-found: error
           compression-level: 0
 
@@ -116,7 +132,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = 'actelyo-rag-desktop-v1.0.5'
+          $tag = 'actelyo-rag-desktop-v1.0.6'
           gh release view $tag 2>$null
-          if ($LASTEXITCODE -ne 0) { gh release create $tag --target ${{ github.sha }} --title 'Actelyo RAG Desktop 1.0.5' --notes 'Corrige la collecte de documents via API Desktop. Chemin identique au collecteur de l interface. Installation et transfert API verifies, logo cyan conserve.' }
-          gh release upload $tag desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.5-x64.exe api-proof/api-upload-proof.json
+          if ($LASTEXITCODE -ne 0) { gh release create $tag --target ${{ github.sha }} --title 'Actelyo RAG Desktop 1.0.6' --notes 'Corrige la collecte de documents via API Desktop. Chemin identique au collecteur de l interface. Installation et transfert API verifies, logo cyan conserve.' }
+          gh release upload $tag desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.6-x64.exe api-proof/api-upload-proof.json

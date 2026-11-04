@@ -101,12 +101,18 @@ jobs:
           node desktop/tests/installed-api-upload.cjs C:/ragqa "$env:GITHUB_WORKSPACE/api-proof"
           if ($LASTEXITCODE -ne 0) { throw 'Installed API upload verification failed' }
 
+      - name: Check the actual installed window icon
+        shell: powershell
+        run: desktop/tests/window-branding.ps1 -Executable 'C:\ragqa\Actelyo RAG.exe' -ExpectedIcon 'desktop/branding/actelyo.ico' -ProofDirectory "$env:RUNNER_TEMP\rag-window-proof"
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Actelyo-RAG-Desktop-Setup-1.0.6-x64
           path: |
             desktop/dist/Actelyo-RAG-Desktop-Setup-1.0.6-x64.exe
             api-proof/api-upload-proof.json
+            ${{ runner.temp }}/rag-window-proof/window-branding.json
+            ${{ runner.temp }}/rag-window-proof/window-icon.png
           if-no-files-found: error
           compression-level: 0
 

@@ -9,11 +9,14 @@ assert.equal(version,require('../package.json').version,'Installed app version d
 const runtimeCode=asar.extractFile(archive,'runtime.cjs');
 assert.deepEqual(runtimeCode,fs.readFileSync(path.join(__dirname,'../runtime.cjs')),'Installed runtime differs from source under test');
 const moduleFile=path.join(out,'installed-runtime.cjs');fs.writeFileSync(moduleFile,runtimeCode);
+fs.writeFileSync(path.join(out,'service-discovery.cjs'),asar.extractFile(archive,'service-discovery.cjs'));
 const runtime=require(moduleFile).createRuntime(path.join(installed,'resources','runtime'),path.join(out,'profile'),console.log);
 const marker='ACTELYO-API-'+crypto.randomUUID();
 (async()=>{
  try{
   const {origin}=await runtime.start();
+  const announcement=JSON.parse(fs.readFileSync(path.join(out,'profile','desktop-service.json'),'utf8'));
+  assert.equal(announcement.apiBase,origin+'/api/v1');assert.equal(announcement.state,'ready');
   const keyResponse=await fetch(origin+'/api/system/generate-api-key',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   assert(keyResponse.ok,'QA API key creation failed');
   const key=(await keyResponse.json()).apiKey?.secret;assert(key,'QA API key missing');

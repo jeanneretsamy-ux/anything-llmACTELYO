@@ -1,4 +1,4 @@
-param([string]$Executable,[Parameter(Mandatory=$true)][string]$ExpectedIcon,[string]$ProofDirectory,[switch]$SelfTest,[string]$DifferentIcon)
+param([string]$Executable,[Parameter(Mandatory=$true)][string]$ExpectedIcon,[string]$ProofDirectory,[switch]$SelfTest,[string]$DifferentIcon,[string]$Product='Actelyo RAG')
 $ErrorActionPreference='Stop'
 Add-Type -ReferencedAssemblies System.Drawing -TypeDefinition @'
 using System;
@@ -45,8 +45,8 @@ try{
  if($handle -eq [IntPtr]::Zero){throw 'No actual WM_GETICON surface found'}
  $different=[ActelyoRuntimeIcon]::Compare($handle,(Resolve-Path -LiteralPath $ExpectedIcon).Path,(Join-Path $proof 'window-icon.png'))
  if($different -ne 0){throw "Runtime window logo mismatch: $different pixels"}
- @{product='Actelyo RAG';surface='WM_GETICON';matchingPixels=$true;personalProfileUsed=$false;observedAt=(Get-Date).ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $proof 'window-branding.json') -Encoding UTF8
- 'PASS actual installed window icon matches the cyan product icon'
+ @{product=$Product;surface='WM_GETICON';matchingPixels=$true;personalProfileUsed=$false;observedAt=(Get-Date).ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $proof 'window-branding.json') -Encoding UTF8
+ 'PASS actual installed window icon matches the product icon'
 }finally{
  $process.Refresh();if(!$process.HasExited){if(!$process.CloseMainWindow()){Write-Warning 'Synthetic QA window could not be closed normally'}elseif(!$process.WaitForExit(10000)){Write-Warning 'Synthetic QA process is still stopping'}}
 }

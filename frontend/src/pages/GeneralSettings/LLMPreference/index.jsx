@@ -519,7 +519,9 @@ export default function GeneralLLMPreference() {
 
   useEffect(() => {
     const filtered = AVAILABLE_LLM_PROVIDERS.filter((llm) =>
-      llmProviderDisplayName(llm, settings).toLowerCase().includes(searchQuery.toLowerCase())
+      llmProviderDisplayName(llm, settings)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
     );
     setFilteredLLMs(filtered);
   }, [searchQuery, selectedLLM]);
@@ -635,7 +637,10 @@ export default function GeneralLLMPreference() {
                       />
                       <div className="flex flex-col text-left">
                         <div className="text-sm font-semibold text-white">
-                          {llmProviderDisplayName(selectedLLMObject, settings) || "None selected"}
+                          {llmProviderDisplayName(
+                            selectedLLMObject,
+                            settings
+                          ) || "None selected"}
                         </div>
                         <div className="mt-1 text-xs text-description">
                           {selectedLLMObject?.description ||

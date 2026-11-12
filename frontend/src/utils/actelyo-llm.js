@@ -7,7 +7,10 @@ export function llmProviderDisplayName(provider, settings) {
       ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname) &&
       url.port === "1235" &&
       url.pathname.replace(/\/+$/, "") === "/v1"
-    ) return "Actelyo LLM";
-  } catch { /* An incomplete configuration keeps its generic label. */ }
+    )
+      return "Actelyo LLM";
+  } catch {
+    /* An incomplete configuration keeps its generic label. */
+  }
   return provider.name;
 }

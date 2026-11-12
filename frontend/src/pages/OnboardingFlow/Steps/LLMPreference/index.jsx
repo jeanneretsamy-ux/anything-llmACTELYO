@@ -426,7 +426,9 @@ export default function LLMPreference({
 
   useEffect(() => {
     const filtered = LLMS.filter((llm) =>
-      llmProviderDisplayName(llm, settings).toLowerCase().includes(searchQuery.toLowerCase())
+      llmProviderDisplayName(llm, settings)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
     );
     setFilteredLLMs(filtered);
   }, [searchQuery, selectedLLM]);

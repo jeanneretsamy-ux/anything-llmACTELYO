@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import ActelyoLogo from "./media/logo/actelyo-logo-nobg.png";
 import AnythingLLM from "./media/logo/actelyo-logo-nobg.png";
 import AnythingLLMDark from "./media/logo/actelyo-logo-nobg.png";
 import DefaultLoginLogoLight from "./media/illustrations/login-logo.svg";

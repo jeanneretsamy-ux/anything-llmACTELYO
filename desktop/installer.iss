@@ -1,6 +1,12 @@
 #ifndef SourceDir
   #define SourceDir "dist\Actelyo RAG Desktop"
 #endif
+#ifndef AppCompression
+  #define AppCompression "lzma2/fast"
+#endif
+#ifndef AppSolidCompression
+  #define AppSolidCompression "yes"
+#endif
 
 [Setup]
 AppId={{C4D852E7-9CF0-4726-9257-8F3DD50BE427}
@@ -14,8 +20,8 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=dist
 OutputBaseFilename=Actelyo-RAG-Desktop-Setup-1.0.7-x64
-Compression=lzma2/fast
-SolidCompression=yes
+Compression={#AppCompression}
+SolidCompression={#AppSolidCompression}
 LZMAUseSeparateProcess=yes
 LZMANumBlockThreads=4
 WizardStyle=modern

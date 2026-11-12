@@ -1,3 +1,4 @@
+import { llmProviderDisplayName } from "@/utils/actelyo-llm";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useState, useRef } from "react";
 import OpenAiLogo from "@/media/llmprovider/openai.png";
@@ -425,7 +426,7 @@ export default function LLMPreference({
 
   useEffect(() => {
     const filtered = LLMS.filter((llm) =>
-      llm.name.toLowerCase().includes(searchQuery.toLowerCase())
+      llmProviderDisplayName(llm, settings).toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredLLMs(filtered);
   }, [searchQuery, selectedLLM]);
@@ -459,7 +460,7 @@ export default function LLMPreference({
               return (
                 <LLMItem
                   key={llm.name}
-                  name={llm.name}
+                  name={llmProviderDisplayName(llm, settings)}
                   value={llm.value}
                   image={llm.logo}
                   description={llm.description}

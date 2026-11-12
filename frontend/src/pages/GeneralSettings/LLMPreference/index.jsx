@@ -1,3 +1,4 @@
+import { llmProviderDisplayName } from "@/utils/actelyo-llm";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Sidebar from "@/components/SettingsSidebar";
@@ -518,7 +519,7 @@ export default function GeneralLLMPreference() {
 
   useEffect(() => {
     const filtered = AVAILABLE_LLM_PROVIDERS.filter((llm) =>
-      llm.name.toLowerCase().includes(searchQuery.toLowerCase())
+      llmProviderDisplayName(llm, settings).toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredLLMs(filtered);
   }, [searchQuery, selectedLLM]);
@@ -608,7 +609,7 @@ export default function GeneralLLMPreference() {
                           return (
                             <LLMItem
                               key={llm.name}
-                              name={llm.name}
+                              name={llmProviderDisplayName(llm, settings)}
                               value={llm.value}
                               image={llm.logo}
                               description={llm.description}
@@ -629,12 +630,12 @@ export default function GeneralLLMPreference() {
                     <div className="flex gap-x-4 items-center">
                       <img
                         src={selectedLLMObject?.logo || AnythingLLMIcon}
-                        alt={`${selectedLLMObject?.name} logo`}
+                        alt={`${llmProviderDisplayName(selectedLLMObject, settings)} logo`}
                         className="w-10 h-10 rounded-md"
                       />
                       <div className="flex flex-col text-left">
                         <div className="text-sm font-semibold text-white">
-                          {selectedLLMObject?.name || "None selected"}
+                          {llmProviderDisplayName(selectedLLMObject, settings) || "None selected"}
                         </div>
                         <div className="mt-1 text-xs text-description">
                           {selectedLLMObject?.description ||

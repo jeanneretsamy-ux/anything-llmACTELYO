@@ -1,11 +1,19 @@
 const { createHash } = require("node:crypto");
 
-const SOURCE_FIELDS = new Set(["id", "docSource", "chunkSource", "url", "title"]);
+const SOURCE_FIELDS = new Set([
+  "id",
+  "docSource",
+  "chunkSource",
+  "url",
+  "title",
+]);
 const DEFAULT_K = [1, 3, 5];
 
 function validateBenchmark(value) {
   if (!value || value.schemaVersion !== 1 || !Array.isArray(value.cases))
-    throw new Error("Benchmark invalide : schemaVersion=1 et cases sont requis.");
+    throw new Error(
+      "Benchmark invalide : schemaVersion=1 et cases sont requis."
+    );
   if (value.cases.length === 0 || value.cases.length > 1000)
     throw new Error("Le benchmark doit contenir entre 1 et 1000 questions.");
   const ids = new Set();
@@ -24,14 +32,18 @@ function validateBenchmark(value) {
       item.relevant.length === 0 ||
       item.relevant.length > 100 ||
       item.relevant.some((id) => typeof id !== "string" || !id.trim())
-    ) throw new Error("Question de benchmark invalide ou identifiant dupliqué.");
+    )
+      throw new Error(
+        "Question de benchmark invalide ou identifiant dupliqué."
+      );
     ids.add(item.id);
   }
   return value;
 }
 
 function sourceId(result, field) {
-  if (!SOURCE_FIELDS.has(field)) throw new Error("Champ source non pris en charge.");
+  if (!SOURCE_FIELDS.has(field))
+    throw new Error("Champ source non pris en charge.");
   const value = field === "id" ? result?.id : result?.metadata?.[field];
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
@@ -47,15 +59,23 @@ function scoreCase(expected, retrieved, ks = DEFAULT_K) {
     recall[`recall@${k}`] = found.size / relevant.size;
     hit[`hit@${k}`] = found.size > 0 ? 1 : 0;
   }
-  return { ...recall, ...hit, reciprocalRank: reciprocalRank < 0 ? 0 : 1 / (reciprocalRank + 1) };
+  return {
+    ...recall,
+    ...hit,
+    reciprocalRank: reciprocalRank < 0 ? 0 : 1 / (reciprocalRank + 1),
+  };
 }
 
 function summarize(rows, ks = DEFAULT_K) {
   if (!rows.length) return { count: 0 };
-  const keys = [...ks.flatMap((k) => [`recall@${k}`, `hit@${k}`]), "reciprocalRank"];
+  const keys = [
+    ...ks.flatMap((k) => [`recall@${k}`, `hit@${k}`]),
+    "reciprocalRank",
+  ];
   const out = { count: rows.length };
-  for (const key of keys) out[key === "reciprocalRank" ? "mrr" : key] =
-    rows.reduce((sum, row) => sum + row.metrics[key], 0) / rows.length;
+  for (const key of keys)
+    out[key === "reciprocalRank" ? "mrr" : key] =
+      rows.reduce((sum, row) => sum + row.metrics[key], 0) / rows.length;
   const latencies = rows.map((row) => row.latencyMs).sort((a, b) => a - b);
   out.latencyMsP50 = latencies[Math.ceil(latencies.length * 0.5) - 1];
   out.latencyMsP95 = latencies[Math.ceil(latencies.length * 0.95) - 1];
@@ -69,7 +89,8 @@ function benchmarkHash(raw) {
 function prometheus(report) {
   const lines = [];
   for (const [language, metrics] of Object.entries(report.byLanguage)) {
-    if (!/^[a-z]{2,3}(?:-[a-z]{2})?$/i.test(language)) throw new Error("Langue invalide pour les métriques.");
+    if (!/^[a-z]{2,3}(?:-[a-z]{2})?$/i.test(language))
+      throw new Error("Langue invalide pour les métriques.");
     for (const [key, value] of Object.entries(metrics)) {
       if (typeof value !== "number" || !Number.isFinite(value)) continue;
       const name = `actelyo_rag_eval_${key.replace(/@/g, "_at_").replace(/[^a-zA-Z0-9_]/g, "_")}`;
@@ -79,4 +100,13 @@ function prometheus(report) {
   return lines.join("\n") + "\n";
 }
 
-module.exports = { DEFAULT_K, SOURCE_FIELDS, validateBenchmark, sourceId, scoreCase, summarize, benchmarkHash, prometheus };
+module.exports = {
+  DEFAULT_K,
+  SOURCE_FIELDS,
+  validateBenchmark,
+  sourceId,
+  scoreCase,
+  summarize,
+  benchmarkHash,
+  prometheus,
+};

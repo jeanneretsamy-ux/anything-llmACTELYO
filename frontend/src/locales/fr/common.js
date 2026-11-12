@@ -8,7 +8,8 @@ const TRANSLATIONS = {
       useCasePersonal: "Pour un usage personnel ou recherche",
       useCaseOther: "Autre",
       comment: "Comment avez-vous configuré ACTELYO LAW HARNESS ?",
-      commentPlaceholder: "Actelyo ERP, recommandation, intégration juridique, etc.",
+      commentPlaceholder:
+        "Actelyo ERP, recommandation, intégration juridique, etc.",
       skip: "Ignorer",
       thankYou: "Merci pour votre retour !",
       title: "Bienvenue dans ACTELYO LAW HARNESS",

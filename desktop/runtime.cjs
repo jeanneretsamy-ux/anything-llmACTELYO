@@ -51,6 +51,7 @@ function createRuntime(runtimeDir, dataDir, status, options = {}) {
     fs.mkdirSync(settingsDir, { recursive: true });
     const envPath = path.join(settingsDir, '.env');
     if (!fs.existsSync(envPath)) fs.writeFileSync(envPath, '# Actelyo RAG\n', { flag: 'wx' });
+    require('./llm-defaults.cjs').initializeDefaultLlm(envPath);
     const apiPort = options.apiPort ?? await freePort();
     if (!Number.isInteger(apiPort) || apiPort < 1024 || apiPort > 65535) throw new Error('Port local invalide.');
     await new Promise((resolve, reject) => {

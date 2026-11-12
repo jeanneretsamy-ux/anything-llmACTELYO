@@ -1499,6 +1499,8 @@ function dumpENV() {
     // Manually Add Keys here which are not already defined in KEY_MAPPING
     // and are either managed or manually set ENV key:values.
     "JWT_EXPIRY",
+    // Preserve the user's first-run decision across backend settings writes.
+    "ACTELYO_DEFAULT_LLM_INITIALIZED",
 
     "STORAGE_DIR",
     "SERVER_PORT",
